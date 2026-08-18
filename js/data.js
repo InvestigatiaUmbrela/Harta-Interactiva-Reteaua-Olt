@@ -55,7 +55,7 @@ const NODES = [
     src: "harta"
   },
   {
-    id: "mariana", kind: "person", x: 288, y: 228,
+    id: "mariana", kind: "person", x: 320, y: 222,
     label: ["Mariana", "MOȚ"],
     role: "Omul-punte între partid și justiție.",
     lead: "Apropiată a lui Paul Stănescu, ajunge secretar de stat în Ministerul Justiției. Este mama lui Emil Moț, primarul Slatinei.",
@@ -175,7 +175,7 @@ const NODES = [
     src: "harta"
   },
   {
-    id: "sri", kind: "service", x: 120, y: 170,
+    id: "sri", kind: "service", x: 118, y: 142,
     label: ["S.R.I."],
     role: "Filiera din spatele numirilor.",
     lead: "Doi dintre directorii Companiei de Apă Olt vin pe filiera serviciilor. Documentarul ridică întrebarea protecției informative de care s-ar fi bucurat rețeaua.",
@@ -187,7 +187,7 @@ const NODES = [
     src: "harta"
   },
   {
-    id: "coldea", kind: "person", x: 130, y: 350,
+    id: "coldea", kind: "person", x: 150, y: 312,
     label: ["Florian", "COLDEA"],
     role: "Numele care aduce în discuție protecția informativă.",
     lead: "Marina Pandarov este cunoscută în presă drept „blonda lui Coldea”. Documentarul folosește această legătură pentru a pune întrebarea protecției informative de care ar fi beneficiat rețeaua.",
@@ -198,7 +198,7 @@ const NODES = [
     src: "harta"
   },
   {
-    id: "pandarof", kind: "person", x: 100, y: 420,
+    id: "pandarof", kind: "person", x: 95, y: 484,
     label: ["Marina", "PANDAROV"],
     role: "„Blonda lui Coldea”.",
     lead: "Interceptată când negocia cantitatea de cocaină pe care să i-o trimită fostului director al Companiei de Apă din Slatina. Punctul în care drogurile intră în schema banilor publici.",
@@ -235,7 +235,7 @@ const NODES = [
     src: "harta"
   },
   {
-    id: "cao", kind: "company-state", x: 280, y: 764,
+    id: "cao", kind: "company-state", x: 280, y: 780,
     label: ["COMPANIA DE", "APĂ OLT"],
     role: "Robinetul local de bani publici.",
     lead: "Compania de Apă Olt și Primăria Slatina devin poarta prin care se aranjează licitații sau se atribuie direct proiecte pentru contractorii de casă.",
@@ -451,10 +451,10 @@ const EDGES = [
   { from: "coldea", to: "pandarof", label: "o sprijină pe", route: "vh",
     detail: "Marina Pandarov este cunoscută în presă drept „blonda lui Coldea”. Numele aduce în discuție posibila protecție informativă și întrebarea de ce rețeaua PSD Olt a fost lăsată în pace atâția ani.", src: "harta" },
 
-  { from: "pandarof", to: "emilmot", label: "îl aprovizionează cu droguri pe", route: "vhv", mid: 500,
+  { from: "pandarof", to: "emilmot", label: "îl aprovizionează cu droguri pe", route: "vhv", mid: 552,
     detail: "În dosarul DIICOT este implicat și primarul Slatinei. Au apărut informații că ar fi fost filmat consumând droguri alături de Pandarov.", src: "harta" },
 
-  { from: "pandarof", to: "usurelu", label: "îl aprovizionează cu droguri pe", route: "vhv", mid: 566,
+  { from: "pandarof", to: "usurelu", label: "îl aprovizionează cu droguri pe", route: "vhv", mid: 604,
     detail: "Marina Pandarov a fost interceptată când negocia cantitatea de cocaină pe care să i-o trimită lui Cătălin Ușurelu, fostul director al companiei de apă din Slatina. Banii din traficul de stupefiante ar fi fost folosiți pentru campaniile electorale ale unor lideri locali care protejau dealerii de droguri.", src: "harta" },
 
   { from: "covaciu", to: "emilmot", label: "este Socrul lui", route: "vh",
@@ -593,3 +593,43 @@ const KIND_META = {
   "service":         { label: "Serviciu",           short: "SRI"  },
   "event":           { label: "Operațiune",         short: "OPER" }
 };
+
+/* ---------- IMAGINI DIN FIGMA ----------
+   Portretele decupate și siglele, exact fișierele din board.
+   ASPECT = lățime/înălțime, ca să calculăm lățimea din înălțimea dorită. */
+
+const ASPECT = {
+  adrianbarbu: 1.277, busi: 0.899, cao: 0.918, carmin: 0.945, coldea: 0.949,
+  covaciu: 1.270, emilmot: 0.845, mariana: 1.050, mineralport: 5.970,
+  oltdrum: 9.683, oprescu: 1.037, pandarof: 0.578, pisicu: 1.768,
+  postolache: 1.000, psd: 0.756, rada: 0.919, sorin: 1.345, sri: 1.000,
+  stanescu: 0.942, titiriga: 1.193, usurelu: 0.845, wagramer: 6.059
+};
+
+/* h = înălțimea în unitățile planșei (1600 × 980)
+   logoOnly = sigla conține deja numele, nu mai desenăm text */
+const MEDIA = {
+  stanescu:    { img: "stanescu", imgH: 112, logo: "psd", logoH: 74 },
+  oprescu:     { img: "oprescu",  imgH: 108, logo: "psd", logoH: 72 },
+  emilmot:     { img: "emilmot",  imgH: 92,  logo: "psd", logoH: 58 },
+  rada:        { img: "rada",     imgH: 88,  logo: "psd", logoH: 56 },
+  busi:        { img: "busi",     imgH: 96,  logo: "psd", logoH: 62 },
+  usurelu:     { img: "usurelu",  imgH: 90,  logo: "psd", logoH: 56 },
+  covaciu:     { img: "covaciu",  imgH: 86,  logo: "sri", logoH: 56 },
+  mariana:     { img: "mariana",  imgH: 88 },
+  coldea:      { img: "coldea",   imgH: 80 },
+  pandarof:    { img: "pandarof", imgH: 104 },
+  postolache:  { img: "postolache", imgH: 86 },
+  titiriga:    { img: "titiriga", imgH: 82 },
+  adrianbarbu: { img: "adrianbarbu", imgH: 92 },
+  pisicu:      { img: "pisicu",   imgH: 82 },
+  sorin:       { img: "sorin",    imgH: 88 },
+  sri:         { img: "sri",      imgH: 68, logoOnly: true },
+  carmin:      { img: "carmin",   imgH: 62, logoOnly: true },
+  mineralport: { img: "mineralport", imgH: 26, logoOnly: true },
+  wagramer:    { img: "wagramer", imgH: 26, logoOnly: true },
+  oltdrum:     { img: "oltdrum",  imgH: 20, logoOnly: true },
+  cao:         { img: "cao",      imgH: 44 }
+};
+
+NODES.forEach(n => { if (MEDIA[n.id]) Object.assign(n, MEDIA[n.id]); });

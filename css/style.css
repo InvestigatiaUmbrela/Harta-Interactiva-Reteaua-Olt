@@ -334,13 +334,31 @@ button { font: inherit; color: inherit; cursor: pointer; }
 /* umbra roșie decalată de sub plăcuțele albe — trebuie să bată regula de tip */
 .node__label.node__shadow { fill: var(--blood); opacity: 0.9; }
 
+/* imaginile decupate din board */
+.node__img {
+  transition: filter var(--dur) var(--ease);
+  pointer-events: none;
+}
+
+/* la hover elementul se aprinde: contur roșu, fundal stins, imaginea vie */
 .node__box {
-  fill: none; stroke: var(--blood-hot); stroke-width: 1;
+  fill: rgba(153, 0, 0, 0.14);
+  stroke: var(--blood-hot); stroke-width: 1;
   opacity: 0; transition: opacity var(--dur) var(--ease);
 }
 .node.is-hot .node__box,
 .node.is-selected .node__box { opacity: 1; }
-.node.is-selected .node__box { stroke-width: 1.5; }
+.node.is-selected .node__box { stroke-width: 1.6; }
+
+.node.is-hot .node__img,
+.node.is-selected .node__img {
+  filter: brightness(1.35) contrast(1.1)
+          drop-shadow(0 0 10px rgba(216, 30, 5, 0.75));
+}
+.node.is-hot .node__label,
+.node.is-selected .node__label { fill: var(--bone); }
+.node.is-hot .node__label.node__shadow,
+.node.is-selected .node__label.node__shadow { fill: var(--blood-hot); }
 
 .layer-nodes .node { opacity: 1; transition: opacity var(--dur) var(--ease); }
 .map__stage.is-dimmed .layer-nodes .node { opacity: var(--idle-opacity); }
@@ -374,48 +392,77 @@ button { font: inherit; color: inherit; cursor: pointer; }
 .edge.is-hot .arrow-head,
 .edge.is-selected .arrow-head { fill: var(--blood-hot); }
 
-/* --- panoul de detalii --- */
-.drawer {
-  position: absolute; top: 0; right: 0; bottom: 0;
-  width: min(430px, 92%);
-  background: rgba(11, 11, 11, 0.97);
-  border-left: var(--rule) solid var(--hair);
-  transform: translateX(101%);
+/* --- pop-up detalii --- */
+.modal {
+  position: fixed; inset: 0; z-index: 950;
+  display: grid; place-items: center;
+  padding: clamp(0.75rem, 3vw, 2.5rem);
+}
+.modal[hidden] { display: none; }
+
+.modal__veil {
+  position: absolute; inset: 0;
+  background: rgba(6, 6, 6, 0.86);
+  backdrop-filter: blur(6px);
+}
+
+.modal__card {
+  position: relative;
+  width: min(720px, 100%);
+  max-height: min(82vh, 860px);
   display: flex; flex-direction: column;
-  z-index: 10;
+  background: var(--board);
+  border: var(--rule) solid var(--hair);
+  box-shadow: 0 0 0 1px rgba(153, 0, 0, 0.35), 0 40px 90px rgba(0, 0, 0, 0.75);
 }
-.drawer.is-open { transform: translateX(0); }
-@media (prefers-reduced-motion: no-preference) {
-  .drawer { transition: transform 0.42s var(--ease); }
+/* semnul casei: linia roșie de sus, ca pe planșă */
+.modal__card::before {
+  content: ""; position: absolute; top: 0; left: 0; right: 0;
+  height: 2px; background: var(--blood);
 }
 
-.drawer__top {
-  display: flex; align-items: flex-start; gap: 1rem;
-  padding: 1.4rem 1.4rem 1rem;
-  border-bottom: var(--rule) solid var(--hair-soft);
-}
-.drawer__kind {
-  font-family: var(--font-mono); font-size: 0.6rem;
-  letter-spacing: 0.2em; text-transform: uppercase; color: var(--blood-hot);
-  display: block; margin-bottom: 0.5rem;
-}
-.drawer__title {
-  margin: 0; font-family: var(--font-plate); font-size: 1.5rem;
-  line-height: 1; letter-spacing: -0.01em; text-transform: uppercase;
-}
-.drawer__role { margin: 0.6rem 0 0; color: var(--ash); font-size: 0.92rem; }
-
-.drawer__close {
-  margin-left: auto; flex: none;
+.modal__close {
+  position: absolute; top: 0.85rem; right: 0.85rem; z-index: 2;
   width: 34px; height: 34px; line-height: 1;
-  background: transparent; border: var(--rule) solid var(--hair);
+  background: rgba(11, 11, 11, 0.8); border: var(--rule) solid var(--hair);
   color: var(--ash); font-size: 1rem;
   transition: color var(--dur) var(--ease), border-color var(--dur) var(--ease);
 }
-.drawer__close:hover { color: var(--bone); border-color: var(--bone); }
+.modal__close:hover { color: var(--bone); border-color: var(--bone); }
 
-.drawer__body { padding: 1.4rem; overflow-y: auto; flex: 1; }
-.drawer__lead { margin: 0 0 1.4rem; font-size: 1rem; line-height: 1.6; }
+.modal__head {
+  display: flex; align-items: flex-end; gap: 1.25rem;
+  padding: 1.6rem 3.4rem 1.25rem 1.6rem;
+  border-bottom: var(--rule) solid var(--hair-soft);
+}
+
+.modal__shot {
+  margin: 0; flex: none;
+  width: clamp(84px, 16vw, 128px);
+  display: grid; place-items: end center;
+}
+.modal__shot[hidden] { display: none; }
+.modal__shot img {
+  display: block; max-width: 100%; max-height: 148px;
+  object-fit: contain; object-position: bottom;
+}
+
+.modal__id { min-width: 0; }
+.modal__kind {
+  font-family: var(--font-mono); font-size: 0.6rem;
+  letter-spacing: 0.2em; text-transform: uppercase; color: var(--blood-hot);
+  display: block; margin-bottom: 0.55rem;
+}
+.modal__title {
+  margin: 0; font-family: var(--font-plate);
+  font-size: clamp(1.35rem, 3.4vw, 2rem);
+  line-height: 0.98; letter-spacing: -0.015em; text-transform: uppercase;
+  overflow-wrap: anywhere;
+}
+.modal__role { margin: 0.6rem 0 0; color: var(--ash); font-size: 0.92rem; }
+
+.modal__body { padding: 1.5rem 1.6rem 1.8rem; overflow-y: auto; }
+.drawer__lead { margin: 0 0 1.4rem; font-size: 1.02rem; line-height: 1.6; }
 
 .drawer__h {
   font-family: var(--font-mono); font-size: 0.62rem;
@@ -540,7 +587,11 @@ button { font: inherit; color: inherit; cursor: pointer; }
 @media (max-width: 860px) {
   .topbar__nav a { padding: 0.35rem 0.5rem; font-size: 0.62rem; }
   .map__stage { height: 62vh; }
-  .drawer { width: 100%; }
+  .modal__card { max-height: 88vh; }
+  .modal__head { padding: 1.2rem 3rem 1rem 1.1rem; gap: 0.9rem; }
+  .modal__body { padding: 1.2rem 1.1rem 1.5rem; }
+  .modal__shot { width: 76px; }
+  .modal__shot img { max-height: 96px; }
 }
 @media (max-width: 560px) {
   .topbar__mark { font-size: 0.68rem; }

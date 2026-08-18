@@ -96,17 +96,22 @@ function mountFilters(map) {
    5. PANOUL DE DETALII
    ============================================================ */
 const drawer = {
-  root: null, kind: null, title: null, role: null, body: null
+  root: null, card: null, kind: null, title: null, role: null, body: null,
+  shot: null, img: null, lastFocus: null
 };
 
 function initDrawer(map) {
-  drawer.root  = $("#drawer");
-  drawer.kind  = $("#drawer-kind");
-  drawer.title = $("#drawer-title");
-  drawer.role  = $("#drawer-role");
-  drawer.body  = $("#drawer-body");
+  drawer.root  = $("#modal");
+  drawer.card  = $(".modal__card");
+  drawer.kind  = $("#modal-kind");
+  drawer.title = $("#modal-title");
+  drawer.role  = $("#modal-role");
+  drawer.body  = $("#modal-body");
+  drawer.shot  = $("#modal-shot");
+  drawer.img   = $("#modal-img");
 
-  $("#drawer-close").addEventListener("click", () => map.clear());
+  $("#modal-close").addEventListener("click", () => map.clear());
+  $("#modal-veil").addEventListener("click", () => map.clear());
 
   drawer.body.addEventListener("click", ev => {
     const row = ev.target.closest("[data-goto]");
@@ -119,10 +124,23 @@ function initDrawer(map) {
       map.select({ type: "edge", index: Number(key) });
     }
   });
+
+  // capcană de focus simplă: Tab nu iese din pop-up cât e deschis
+  drawer.root.addEventListener("keydown", ev => {
+    if (ev.key !== "Tab") return;
+    const f = drawer.card.querySelectorAll("button, [href], input, [tabindex]:not([tabindex='-1'])");
+    if (!f.length) return;
+    const first = f[0], last = f[f.length - 1];
+    if (ev.shiftKey && document.activeElement === first) { ev.preventDefault(); last.focus(); }
+    else if (!ev.shiftKey && document.activeElement === last) { ev.preventDefault(); first.focus(); }
+  });
 }
 
 function closeDrawer() {
-  drawer.root.classList.remove("is-open");
+  if (!drawer.root || drawer.root.hidden) return;
+  drawer.root.hidden = true;
+  if (drawer.lastFocus && document.contains(drawer.lastFocus)) drawer.lastFocus.focus();
+  drawer.lastFocus = null;
 }
 
 function relationsOf(id) {
@@ -187,15 +205,30 @@ function renderDrawer(sel) {
       <p class="figure__note">${DISCLAIMER}</p>`;
   }
 
-  drawer.root.classList.add("is-open");
+  // portretul din board apare și în pop-up
+  const face = sel.type === "node" ? byId[sel.id] : byId[EDGES[sel.index].from];
+  if (face && face.img) {
+    drawer.img.src = `assets/fig/${face.img}.png`;
+    drawer.img.alt = face.label.join(" ");
+    drawer.shot.hidden = false;
+  } else {
+    drawer.shot.hidden = true;
+    drawer.img.removeAttribute("src");
+  }
+
+  if (drawer.root.hidden) drawer.lastFocus = document.activeElement;
+  drawer.root.hidden = false;
   drawer.body.scrollTop = 0;
+  $("#modal-close").focus({ preventScroll: true });
 
   if (gsap && !prefersReduced()) {
-    gsap.fromTo(
-      drawer.body.children,
+    gsap.fromTo(drawer.card,
+      { opacity: 0, y: 26, scale: 0.985 },
+      { opacity: 1, y: 0, scale: 1, duration: 0.34, ease: "power3.out", overwrite: true });
+    gsap.fromTo(drawer.body.children,
       { opacity: 0, y: 14 },
-      { opacity: 1, y: 0, duration: 0.4, stagger: 0.045, ease: "power2.out", overwrite: true }
-    );
+      { opacity: 1, y: 0, duration: 0.4, stagger: 0.045, delay: 0.1,
+        ease: "power2.out", overwrite: true });
   }
 }
 

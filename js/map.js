@@ -62,7 +62,12 @@ class NetworkMap {
 
       const plate = data.kind !== "person" && data.kind !== "event";
       const lineH = plate ? 25 : 24;
-      const total = data.label.length * lineH;
+
+      /* Textul stă într-un subgrup: el singur dictează unde se prind săgețile,
+         ca imaginile de deasupra să nu mute traseele. */
+      const textG = el("g", { class: "node__text" });
+      const lines = data.logoOnly ? [] : data.label;
+      const total = lines.length * lineH;
       const top = data.y - total / 2 + lineH * 0.78;
 
       if (data.eyebrow) {
@@ -71,11 +76,11 @@ class NetworkMap {
           x: data.x, y: top - lineH * 0.92, "text-anchor": "middle"
         });
         this.fillEyebrow(eb, data.eyebrow);
-        g.append(eb);
+        textG.append(eb);
       }
 
       // plăcuțele albe poartă umbra roșie decalată din board-ul Figma
-      data.label.forEach((line, i) => {
+      lines.forEach((line, i) => {
         const y = top + i * lineH;
         const cls = `node__label${plate ? " node__label--plate" : ""}`;
         if (plate) {
@@ -88,15 +93,49 @@ class NetworkMap {
         }
         const t = el("text", { class: cls, x: data.x, y, "text-anchor": "middle" });
         t.textContent = line;
-        g.append(t);
+        textG.append(t);
       });
+
+      // pentru nodurile fără text, ancora rămâne un punct în centru
+      if (!lines.length && !data.eyebrow) {
+        textG.append(el("rect", {
+          x: data.x - 1, y: data.y - 1, width: 2, height: 2, fill: "none"
+        }));
+      }
+
+      g.append(textG);
+      this.drawMedia(g, data, lines.length ? top - lineH * (data.eyebrow ? 1.9 : 0.95)
+                                           : data.y + (data.eyebrow ? 6 : data.imgH / 2));
 
       const box = el("rect", { class: "node__box" });
       const hit = el("rect", { class: "node__hit" });
       g.append(box, hit);
 
       this.layerNodes.append(g);
-      this.nodeEls[data.id] = { g, box, hit, data };
+      this.nodeEls[data.id] = { g, box, hit, textG, data };
+    });
+  }
+
+  /* portretul decupat și sigla, aliniate pe același rând, deasupra numelui */
+  drawMedia(g, data, bottomY) {
+    if (!data.img) return;
+
+    const items = [{ name: data.img, h: data.imgH }];
+    if (data.logo) items.push({ name: data.logo, h: data.logoH });
+    items.forEach(it => { it.w = it.h * (ASPECT[it.name] || 1); });
+
+    const gap = 10;
+    const totalW = items.reduce((s, it) => s + it.w, 0) + gap * (items.length - 1);
+    let x = data.x - totalW / 2;
+
+    items.forEach(it => {
+      g.append(el("image", {
+        class: "node__img",
+        href: `assets/fig/${it.name}.png`,
+        x, y: bottomY - it.h, width: it.w, height: it.h,
+        preserveAspectRatio: "xMidYMax meet"
+      }));
+      x += it.w + gap;
     });
   }
 
@@ -111,25 +150,35 @@ class NetworkMap {
     });
   }
 
+  /* Două dreptunghiuri per nod:
+     rect  — doar textul, de el se prind săgețile;
+     full  — text + imagini, zona de hover, click și contur. */
   measure() {
     for (const id in this.nodeEls) {
       const ref = this.nodeEls[id];
-      const b = ref.g.getBBox();
+
+      const t = ref.textG.getBBox();
       const rect = {
-        x: b.x - PAD_X, y: b.y - PAD_Y,
-        w: b.width + PAD_X * 2, h: b.height + PAD_Y * 2
+        x: t.x - PAD_X, y: t.y - PAD_Y,
+        w: t.width + PAD_X * 2, h: t.height + PAD_Y * 2
       };
       rect.cx = rect.x + rect.w / 2;
       rect.cy = rect.y + rect.h / 2;
       ref.rect = rect;
-      ref.box.setAttribute("x", rect.x);
-      ref.box.setAttribute("y", rect.y);
-      ref.box.setAttribute("width", rect.w);
-      ref.box.setAttribute("height", rect.h);
-      ref.hit.setAttribute("x", rect.x);
-      ref.hit.setAttribute("y", rect.y);
-      ref.hit.setAttribute("width", rect.w);
-      ref.hit.setAttribute("height", rect.h);
+
+      const b = ref.g.getBBox();
+      const full = {
+        x: b.x - 8, y: b.y - 8,
+        w: b.width + 16, h: b.height + 16
+      };
+      ref.full = full;
+
+      ["box", "hit"].forEach(k => {
+        ref[k].setAttribute("x", full.x);
+        ref[k].setAttribute("y", full.y);
+        ref[k].setAttribute("width", full.w);
+        ref[k].setAttribute("height", full.h);
+      });
     }
   }
 
