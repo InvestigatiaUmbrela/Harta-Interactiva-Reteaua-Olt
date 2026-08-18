@@ -24,7 +24,8 @@ function mountVideo() {
   iframe.src = `https://www.youtube-nocookie.com/embed/${VIDEO_ID}?rel=0&modestbranding=1`;
   iframe.title = "Documentar — Rețeaua Olt";
   iframe.loading = "lazy";
-  iframe.allow = "accelerometer; clipboard-write; encrypted-media; picture-in-picture";
+  iframe.allow = "accelerometer; clipboard-write; encrypted-media; picture-in-picture; fullscreen";
+  iframe.setAttribute("allowfullscreen", "");
   iframe.allowFullscreen = true;
   frame.append(iframe);
 }
@@ -603,6 +604,7 @@ function boot() {
   $("#zoom-in").addEventListener("click", () => map.zoomBy(1.25));
   $("#zoom-out").addEventListener("click", () => map.zoomBy(1 / 1.25));
   $("#zoom-reset").addEventListener("click", () => { map.reset(); map.clear(); });
+  map.bindFullscreen($("#map-full"));
 
   document.addEventListener("keydown", ev => {
     if (ev.key === "Escape") map.clear();

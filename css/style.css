@@ -735,6 +735,35 @@ button { font: inherit; color: inherit; cursor: pointer; }
   letter-spacing: 0.14em; text-transform: uppercase; color: var(--ash-dim);
 }
 
+
+/* ---------- ECRAN COMPLET ---------- */
+/* Varianta nativă: browserul întinde chiar elementul, noi doar îl umplem. */
+.map__stage:fullscreen,
+.map__stage:-webkit-full-screen {
+  width: 100%; height: 100%;
+  aspect-ratio: auto;
+  border: 0;
+}
+
+/* Varianta de rezervă. `inset: 0` dă exact zona vizibilă — o lățime
+   explicită s-ar bate cap în cap cu bara de derulare. */
+.map__stage.is-faux-full {
+  position: fixed; inset: 0; z-index: 960;
+  aspect-ratio: auto;
+  border: 0;
+}
+body.has-faux-full { overflow: hidden; }
+
+.chip--full { margin-left: 0.35rem; }
+.chip--full[aria-pressed="true"] {
+  color: var(--bone); border-color: var(--blood-hot);
+  background: rgba(153, 0, 0, 0.18);
+}
+
+/* pe ecran complet, indiciul și bara rămân lizibile deasupra plansei */
+.map__stage:fullscreen .map__hint,
+.map__stage.is-faux-full .map__hint { bottom: 1.2rem; left: 1.2rem; }
+
 /* ---------- 11. RESPONSIVE ---------- */
 @media (max-width: 860px) {
   .topbar__nav a { padding: 0.35rem 0.5rem; font-size: 0.62rem; }

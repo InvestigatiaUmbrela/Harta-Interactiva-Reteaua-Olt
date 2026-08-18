@@ -313,7 +313,7 @@ class BoardMap {
     this.maxK = Math.max(whole * 8, 1.6);
     this.baseK = whole;             // reper pentru zoom-ul amortizat al grilei
 
-    const k = whole * 0.86;
+    const k = whole * 0.95;
 
     this.view = this.clamp({ k, x: 0, y: 0 });
     this.target = { ...this.view };
@@ -337,6 +337,69 @@ class BoardMap {
   }
 
   reset() { this.fit(); }
+
+  /* Ecran complet. Unde API-ul nu e disponibil — Safari pe iPhone nu-l dă
+     pentru elemente oarecare — cădem pe un strat fix peste toată pagina,
+     care arată la fel pentru cine se uită. */
+  isFull() {
+    return document.fullscreenElement === this.stage ||
+           this.stage.classList.contains("is-faux-full");
+  }
+
+  toggleFullscreen() {
+    const refit = () => setTimeout(() => this.fit(), 60);
+
+    if (this.isFull()) {
+      if (document.fullscreenElement) {
+        (document.exitFullscreen || document.webkitExitFullscreen)
+          .call(document);
+      } else {
+        this.stage.classList.remove("is-faux-full");
+        document.body.classList.remove("has-faux-full");
+        refit();
+      }
+      return;
+    }
+
+    const req = this.stage.requestFullscreen || this.stage.webkitRequestFullscreen;
+    if (req) {
+      req.call(this.stage).then(refit).catch(() => {
+        this.stage.classList.add("is-faux-full");
+        document.body.classList.add("has-faux-full");
+        refit();
+      });
+    } else {
+      this.stage.classList.add("is-faux-full");
+      document.body.classList.add("has-faux-full");
+      refit();
+    }
+  }
+
+  bindFullscreen(button) {
+    if (!button) return;
+
+    const sync = () => {
+      const on = this.isFull();
+      button.setAttribute("aria-pressed", String(on));
+      button.textContent = on ? "Ieși" : "Tot ecranul";
+    };
+
+    button.addEventListener("click", () => { this.toggleFullscreen(); sync(); });
+
+    ["fullscreenchange", "webkitfullscreenchange"].forEach(e =>
+      document.addEventListener(e, () => { this.fit(); sync(); }));
+
+    // Esc iese și din varianta de rezervă
+    document.addEventListener("keydown", ev => {
+      if (ev.key === "Escape" && this.stage.classList.contains("is-faux-full")) {
+        this.stage.classList.remove("is-faux-full");
+        document.body.classList.remove("has-faux-full");
+        this.fit(); sync();
+      }
+    });
+
+    sync();
+  }
 
   focus(id, zoom) {
     const en = GRAPH.entities.find(e => e.id === id);
@@ -380,7 +443,13 @@ class BoardMap {
 
   bindPanZoom() {
     const pts = new Map();
-    let last = null, pinch = null;
+    let last = null, pinch = null, downAt = null;
+
+    /* Cât se poate mișca degetul sau mouse-ul între apăsare și ridicare
+       fără ca gestul să fie considerat tragere. Se măsoară față de punctul
+       de apăsare, nu pe fiecare mișcare în parte: la mouse mâna tremură
+       mereu câțiva pixeli, iar un prag pe mișcare anula orice click. */
+    const DRAG_SLOP = 7;
 
     const local = ev => {
       const r = this.stage.getBoundingClientRect();
@@ -394,6 +463,7 @@ class BoardMap {
       this.vel = { x: 0, y: 0 };
       if (pts.size === 1) {
         last = local(ev);
+        downAt = local(ev);
         this.stage.setPointerCapture(ev.pointerId);
         this.stage.classList.add("is-panning");
       } else if (pts.size === 2) {
@@ -437,7 +507,9 @@ class BoardMap {
       if (pts.size === 1 && last) {
         const p = local(ev);
         const dx = p.x - last.x, dy = p.y - last.y;
-        if (Math.abs(dx) + Math.abs(dy) > 3) this.dragged = true;
+        if (downAt && Math.hypot(p.x - downAt.x, p.y - downAt.y) > DRAG_SLOP) {
+          this.dragged = true;
+        }
 
         /* În timpul tragerii, planșa urmează degetul 1:1 — orice lag ar
            părea o defecțiune. Reținem viteza pentru alunecarea de la final. */
