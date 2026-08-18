@@ -532,10 +532,21 @@ function startAtTop() {
     catch (_) { window.scrollTo(0, 0); }
   };
 
+  /* Reîncercările la momente fixe pierd cursa pe telefon: browserul
+     restaurează poziția când vrea el, de multe ori după ce imaginile
+     s-au încărcat și pagina a crescut. Așa că nu mai ghicim momentul —
+     ascultăm derularea însăși. Orice mișcare pe care n-a făcut-o
+     utilizatorul e anulată pe loc. Garda se ridică la 2,5 secunde după
+     ce pagina e complet încărcată, sau la prima atingere. */
+  const guard = () => { if (!userMoved) top(); };
+  window.addEventListener("scroll", guard, { passive: true });
+
+  const release = () =>
+    setTimeout(() => window.removeEventListener("scroll", guard), 2500);
+  if (document.readyState === "complete") release();
+  else window.addEventListener("load", release, { once: true });
+
   manual(); top();
-  requestAnimationFrame(() => { manual(); top(); });
-  window.addEventListener("load", () => { manual(); top(); }, { once: true });
-  [120, 400, 900, 1800].forEach(ms => setTimeout(top, ms));
 
   // revenirea în filă din memoria de fundal a telefonului
   window.addEventListener("pageshow", ev => { if (ev.persisted) { manual(); top(); } });

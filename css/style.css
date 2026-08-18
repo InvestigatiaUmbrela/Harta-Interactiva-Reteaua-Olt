@@ -752,6 +752,26 @@ button { font: inherit; color: inherit; cursor: pointer; }
   .map__zoom { margin-left: 0; }
 }
 
+
+/* ---------- GLOW REDUS PE TELEFON ---------- */
+/* Pe ecrane mici, aceleași halouri arată mult mai tare: pixelii sunt mai
+   deși, iar textul umple ecranul. Le lăsăm la o cincime din intensitate. */
+@media (max-width: 700px) {
+  .hero__title { text-shadow: 0 0 26px rgba(255, 255, 255, 0.056); }
+  .hero__title .red {
+    text-shadow: 0.055em 0.055em 0 rgba(0, 0, 0, 0.9),
+                 0 0 30px rgba(216, 30, 5, 0.11);
+  }
+  .section__title { text-shadow: 0 0 24px rgba(255, 255, 255, 0.048); }
+  .figure__value { text-shadow: 0 0 26px rgba(216, 30, 5, 0.1); }
+  .modal__title { text-shadow: 0 0 20px rgba(255, 255, 255, 0.05); }
+  .wire__ink { filter: drop-shadow(0 0 3px rgba(255, 255, 255, 0.1)); }
+  .hero__web .web-pulse { filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.15)); }
+  .progress i {
+    box-shadow: 0 0 8px rgba(216, 30, 5, 0.18), 0 0 18px rgba(216, 30, 5, 0.09);
+  }
+}
+
 /* ---------- 12. MIȘCARE REDUSĂ ---------- */
 @media (prefers-reduced-motion: reduce) {
   .topbar { transition: none; }
