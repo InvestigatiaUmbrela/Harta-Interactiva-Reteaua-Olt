@@ -1,0 +1,555 @@
+/* ============================================================
+   REȚEAUA OLT
+   Paletă preluată direct din harta Figma:
+     fundal #171717 · roșu #990000 · alb #FFFFFF
+   Gramatica vizuală a paginii este conectorul hărții:
+   linie albă ortogonală, punct la origine, vârf de săgeată la țintă.
+   ============================================================ */
+
+/* ---------- 1. TOKENS ---------- */
+:root {
+  --ink:        #0b0b0b;
+  --board:      #171717;
+  --board-2:    #1e1e1e;
+  --blood:      #990000;
+  --blood-hot:  #d81e05;
+  --bone:       #ffffff;
+  --ash:        #8c8c8c;
+  --ash-dim:    #5a5a5a;
+  --hair:       rgba(255, 255, 255, 0.14);
+  --hair-soft:  rgba(255, 255, 255, 0.07);
+
+  --font-plate: "Archivo Black", "Arial Black", sans-serif;
+  --font-cond:  "Big Shoulders Display", "Oswald", sans-serif;
+  --font-body:  "Barlow Semi Condensed", "Helvetica Neue", sans-serif;
+  --font-mono:  "IBM Plex Mono", ui-monospace, monospace;
+
+  --step-0: clamp(0.95rem, 0.9rem + 0.2vw, 1.05rem);
+  --step-1: clamp(1.15rem, 1.05rem + 0.4vw, 1.4rem);
+  --step-2: clamp(1.6rem, 1.3rem + 1.2vw, 2.4rem);
+  --step-3: clamp(2.2rem, 1.6rem + 2.8vw, 4.2rem);
+  --step-4: clamp(3rem, 1.6rem + 6.4vw, 8.5rem);
+
+  --gut: clamp(1.25rem, 4vw, 4.5rem);
+  --rule: 1px;
+  --dur: 0.28s;
+  --ease: cubic-bezier(0.2, 0.7, 0.3, 1);
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+
+body {
+  margin: 0;
+  background: var(--ink);
+  color: var(--bone);
+  font-family: var(--font-body);
+  font-size: var(--step-0);
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+/* grain + vignetă: dosarul are textură, nu e un PDF curat */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 900;
+  pointer-events: none;
+  opacity: 0.05;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/></filter><rect width='160' height='160' filter='url(%23n)'/></svg>");
+}
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 899;
+  pointer-events: none;
+  background: radial-gradient(ellipse at 50% 42%, transparent 40%, rgba(0, 0, 0, 0.65) 100%);
+}
+
+::selection { background: var(--blood); color: var(--bone); }
+
+a { color: inherit; }
+
+:focus-visible {
+  outline: 2px solid var(--blood-hot);
+  outline-offset: 3px;
+}
+
+button { font: inherit; color: inherit; cursor: pointer; }
+
+.shell { width: min(1440px, 100%); margin-inline: auto; padding-inline: var(--gut); }
+
+.sr-only {
+  position: absolute; width: 1px; height: 1px;
+  padding: 0; margin: -1px; overflow: hidden;
+  clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+}
+
+.skip-link {
+  position: absolute; top: -100px; left: var(--gut); z-index: 1000;
+  background: var(--blood); color: var(--bone);
+  padding: 0.6rem 1rem; font-family: var(--font-mono); font-size: 0.75rem;
+  letter-spacing: 0.08em; text-transform: uppercase; text-decoration: none;
+}
+.skip-link:focus { top: 0.75rem; }
+
+/* ---------- 2. NAVIGAȚIE ---------- */
+.topbar {
+  position: fixed; inset: 0 0 auto 0; z-index: 800;
+  display: flex; align-items: center; gap: 1.25rem;
+  padding: 0.7rem var(--gut);
+  background: rgba(11, 11, 11, 0.82);
+  backdrop-filter: blur(10px);
+  border-bottom: var(--rule) solid var(--hair-soft);
+  transform: translateY(-100%);
+}
+.topbar.is-visible { transform: translateY(0); transition: transform 0.4s var(--ease); }
+
+.topbar__mark {
+  font-family: var(--font-plate); font-size: 0.8rem;
+  letter-spacing: 0.02em; text-transform: uppercase;
+  display: flex; align-items: baseline; gap: 0.45rem;
+}
+.topbar__mark b { color: var(--blood-hot); font-weight: inherit; }
+
+.topbar__nav { margin-left: auto; display: flex; gap: 0.25rem; flex-wrap: wrap; }
+.topbar__nav a {
+  font-family: var(--font-mono); font-size: 0.68rem;
+  letter-spacing: 0.12em; text-transform: uppercase;
+  color: var(--ash); text-decoration: none;
+  padding: 0.4rem 0.7rem; border: var(--rule) solid transparent;
+  transition: color var(--dur) var(--ease), border-color var(--dur) var(--ease);
+}
+.topbar__nav a:hover { color: var(--bone); border-color: var(--hair); }
+
+/* ---------- 3. HERO ---------- */
+.hero {
+  position: relative;
+  min-height: 100svh;
+  display: grid;
+  align-content: center;
+  padding: 8rem var(--gut) 5rem;
+  overflow: hidden;
+  border-bottom: var(--rule) solid var(--hair-soft);
+}
+
+/* semnătura: harta însăși se desenează în fundal */
+.hero__web {
+  position: absolute; inset: 0;
+  width: 100%; height: 100%;
+  opacity: 0.3;
+  pointer-events: none;
+}
+.hero__web path { fill: none; stroke: var(--bone); stroke-width: 1; }
+.hero__web circle { fill: var(--blood); }
+
+.hero__inner { position: relative; z-index: 2; width: min(1440px, 100%); margin-inline: auto; }
+
+.hero__eyebrow {
+  font-family: var(--font-mono); font-size: 0.72rem;
+  letter-spacing: 0.24em; text-transform: uppercase; color: var(--ash);
+  display: flex; align-items: center; gap: 0.9rem; margin-bottom: 1.6rem;
+}
+.hero__eyebrow::before {
+  content: ""; width: clamp(24px, 6vw, 72px); height: var(--rule);
+  background: var(--blood-hot); flex: none;
+}
+
+.hero__title {
+  margin: 0;
+  font-family: var(--font-plate);
+  font-size: var(--step-4);
+  line-height: 0.86;
+  letter-spacing: -0.025em;
+  text-transform: uppercase;
+}
+.hero__title .line { display: block; overflow: hidden; }
+.hero__title .line > span { display: block; }
+.hero__title .red {
+  color: var(--blood-hot);
+  text-shadow: 0.055em 0.055em 0 rgba(0, 0, 0, 0.9);
+}
+
+.hero__lede {
+  max-width: 62ch; margin: 2.4rem 0 0;
+  font-size: var(--step-1); color: #cfcfcf; line-height: 1.5;
+}
+.hero__lede strong { color: var(--bone); font-weight: 600; }
+
+.hero__cta { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 2.6rem; }
+
+.btn {
+  display: inline-flex; align-items: center; gap: 0.6rem;
+  padding: 0.85rem 1.4rem;
+  font-family: var(--font-mono); font-size: 0.72rem;
+  letter-spacing: 0.14em; text-transform: uppercase;
+  text-decoration: none; border: var(--rule) solid var(--hair);
+  background: transparent; color: var(--bone);
+  transition: background var(--dur) var(--ease), border-color var(--dur) var(--ease),
+              color var(--dur) var(--ease);
+}
+.btn:hover { background: var(--bone); color: var(--ink); border-color: var(--bone); }
+.btn--blood { background: var(--blood); border-color: var(--blood); }
+.btn--blood:hover { background: var(--blood-hot); border-color: var(--blood-hot); color: var(--bone); }
+
+.hero__scroll {
+  position: absolute; left: var(--gut); bottom: 1.6rem; z-index: 2;
+  font-family: var(--font-mono); font-size: 0.62rem;
+  letter-spacing: 0.2em; text-transform: uppercase; color: var(--ash-dim);
+}
+
+/* ---------- 4. SECȚIUNI ---------- */
+.section { padding: clamp(4rem, 9vw, 8.5rem) 0; border-bottom: var(--rule) solid var(--hair-soft); }
+.section--flush { padding-bottom: 0; }
+
+.section__head { margin-bottom: clamp(2rem, 4vw, 3.5rem); }
+
+.section__num {
+  font-family: var(--font-mono); font-size: 0.7rem;
+  letter-spacing: 0.2em; color: var(--blood-hot);
+  display: block; margin-bottom: 0.9rem;
+}
+
+.section__title {
+  margin: 0;
+  font-family: var(--font-plate);
+  font-size: var(--step-3); line-height: 0.92;
+  letter-spacing: -0.02em; text-transform: uppercase;
+}
+
+.section__rule { height: var(--rule); background: var(--blood); margin-top: 1.4rem; transform-origin: left; }
+
+.section__sub { max-width: 68ch; margin: 1.4rem 0 0; color: var(--ash); font-size: var(--step-1); }
+
+/* ---------- 5. VIDEO ---------- */
+.video__frame {
+  position: relative; aspect-ratio: 16 / 9; width: 100%;
+  background: var(--board); border: var(--rule) solid var(--hair);
+}
+.video__frame iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+
+.video__placeholder {
+  position: absolute; inset: 0;
+  display: grid; place-content: center; gap: 0.9rem; text-align: center;
+  padding: 2rem;
+}
+.video__placeholder code {
+  font-family: var(--font-mono); font-size: 0.8rem;
+  color: var(--blood-hot); background: rgba(153, 0, 0, 0.12);
+  padding: 0.35rem 0.6rem; border: var(--rule) solid rgba(153, 0, 0, 0.4);
+}
+.video__placeholder p { color: var(--ash); margin: 0; max-width: 46ch; }
+
+.video__meta {
+  display: flex; flex-wrap: wrap; gap: 2rem; margin-top: 1.5rem;
+  font-family: var(--font-mono); font-size: 0.68rem;
+  letter-spacing: 0.14em; text-transform: uppercase; color: var(--ash-dim);
+}
+
+/* ---------- 6. HARTA ---------- */
+.map { position: relative; }
+
+.map__toolbar {
+  display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem;
+  padding: 0.75rem 0; margin-bottom: 0.75rem;
+}
+
+.map__search {
+  flex: 1 1 200px; max-width: 280px;
+  background: var(--board); border: var(--rule) solid var(--hair);
+  color: var(--bone); font-family: var(--font-mono); font-size: 0.72rem;
+  letter-spacing: 0.06em; padding: 0.62rem 0.8rem;
+}
+.map__search::placeholder { color: var(--ash-dim); text-transform: uppercase; letter-spacing: 0.14em; }
+.map__search:focus { border-color: var(--blood-hot); outline: none; }
+
+.chip {
+  font-family: var(--font-mono); font-size: 0.64rem;
+  letter-spacing: 0.12em; text-transform: uppercase;
+  padding: 0.5rem 0.75rem;
+  background: transparent; border: var(--rule) solid var(--hair);
+  color: var(--ash);
+  display: inline-flex; align-items: center; gap: 0.45rem;
+  transition: color var(--dur) var(--ease), border-color var(--dur) var(--ease),
+              background var(--dur) var(--ease);
+}
+.chip:hover { color: var(--bone); border-color: var(--bone); }
+.chip[aria-pressed="true"] { color: var(--bone); border-color: var(--bone); background: rgba(255, 255, 255, 0.06); }
+.chip__dot { width: 7px; height: 7px; flex: none; background: currentColor; }
+.chip--person   .chip__dot { background: var(--blood-hot); }
+.chip--office   .chip__dot { background: var(--bone); }
+.chip--company-state   .chip__dot { background: #6f9bd1; }
+.chip--company-private .chip__dot { background: var(--blood); }
+.chip--service  .chip__dot { background: #c9a227; }
+.chip--event    .chip__dot { background: #b06be0; }
+
+.map__zoom { margin-left: auto; display: flex; gap: 0.35rem; }
+.map__zoom .chip { min-width: 40px; justify-content: center; }
+
+.map__stage {
+  position: relative;
+  background: var(--board);
+  border: var(--rule) solid var(--hair);
+  height: clamp(460px, 76vh, 880px);
+  overflow: hidden;
+  cursor: grab;
+  touch-action: none;
+}
+.map__stage.is-panning { cursor: grabbing; }
+.map__stage.is-dimmed .layer-edges,
+.map__stage.is-dimmed .layer-nodes { --idle-opacity: 0.12; }
+
+.map__svg { width: 100%; height: 100%; display: block; }
+
+.map__hint {
+  position: absolute; left: 0.85rem; bottom: 0.7rem;
+  font-family: var(--font-mono); font-size: 0.6rem;
+  letter-spacing: 0.14em; text-transform: uppercase; color: var(--ash-dim);
+  pointer-events: none;
+}
+
+/* --- noduri --- */
+.node { cursor: pointer; }
+.node__hit { fill: transparent; }
+.node__eyebrow {
+  font-family: var(--font-body); font-size: 11px; font-weight: 600;
+  letter-spacing: 0.06em; fill: var(--bone);
+}
+.node__eyebrow tspan.accent { fill: var(--blood-hot); }
+.node__label { font-family: var(--font-cond); font-weight: 800; letter-spacing: 0.01em; }
+.node__label--plate { font-family: var(--font-plate); font-weight: 400; }
+
+.node--person   .node__label { fill: var(--blood-hot); font-size: 21px; }
+.node--office   .node__label { fill: var(--bone); font-size: 21px; }
+.node--service  .node__label { fill: var(--bone); font-size: 20px; }
+.node--event    .node__label { fill: var(--blood-hot); font-size: 19px; }
+.node--company-state   .node__label,
+.node--company-private .node__label { fill: var(--bone); font-size: 20px; }
+
+/* umbra roșie decalată de sub plăcuțele albe — trebuie să bată regula de tip */
+.node__label.node__shadow { fill: var(--blood); opacity: 0.9; }
+
+.node__box {
+  fill: none; stroke: var(--blood-hot); stroke-width: 1;
+  opacity: 0; transition: opacity var(--dur) var(--ease);
+}
+.node.is-hot .node__box,
+.node.is-selected .node__box { opacity: 1; }
+.node.is-selected .node__box { stroke-width: 1.5; }
+
+.layer-nodes .node { opacity: 1; transition: opacity var(--dur) var(--ease); }
+.map__stage.is-dimmed .layer-nodes .node { opacity: var(--idle-opacity); }
+.map__stage.is-dimmed .layer-nodes .node.is-active { opacity: 1; }
+
+/* --- muchii --- */
+.edge__line {
+  fill: none; stroke: var(--bone); stroke-width: 1.1;
+  stroke-linejoin: round; stroke-linecap: round;
+}
+.edge__hit { fill: none; stroke: transparent; stroke-width: 16; cursor: pointer; }
+.edge__dot { fill: var(--bone); }
+.edge__label {
+  font-family: var(--font-body); font-style: italic; font-weight: 500;
+  font-size: 11px; fill: var(--blood-hot); pointer-events: none;
+  opacity: 0.92;
+}
+
+.edge { transition: opacity var(--dur) var(--ease); }
+.map__stage.is-dimmed .layer-edges .edge { opacity: var(--idle-opacity); }
+.map__stage.is-dimmed .layer-edges .edge.is-active { opacity: 1; }
+
+.edge.is-hot .edge__line,
+.edge.is-selected .edge__line { stroke: var(--blood-hot); stroke-width: 2; }
+.edge.is-hot .edge__label,
+.edge.is-selected .edge__label { fill: var(--bone); opacity: 1; }
+.edge.is-hot .edge__dot,
+.edge.is-selected .edge__dot { fill: var(--blood-hot); }
+
+.arrow-head { fill: var(--bone); }
+.edge.is-hot .arrow-head,
+.edge.is-selected .arrow-head { fill: var(--blood-hot); }
+
+/* --- panoul de detalii --- */
+.drawer {
+  position: absolute; top: 0; right: 0; bottom: 0;
+  width: min(430px, 92%);
+  background: rgba(11, 11, 11, 0.97);
+  border-left: var(--rule) solid var(--hair);
+  transform: translateX(101%);
+  display: flex; flex-direction: column;
+  z-index: 10;
+}
+.drawer.is-open { transform: translateX(0); }
+@media (prefers-reduced-motion: no-preference) {
+  .drawer { transition: transform 0.42s var(--ease); }
+}
+
+.drawer__top {
+  display: flex; align-items: flex-start; gap: 1rem;
+  padding: 1.4rem 1.4rem 1rem;
+  border-bottom: var(--rule) solid var(--hair-soft);
+}
+.drawer__kind {
+  font-family: var(--font-mono); font-size: 0.6rem;
+  letter-spacing: 0.2em; text-transform: uppercase; color: var(--blood-hot);
+  display: block; margin-bottom: 0.5rem;
+}
+.drawer__title {
+  margin: 0; font-family: var(--font-plate); font-size: 1.5rem;
+  line-height: 1; letter-spacing: -0.01em; text-transform: uppercase;
+}
+.drawer__role { margin: 0.6rem 0 0; color: var(--ash); font-size: 0.92rem; }
+
+.drawer__close {
+  margin-left: auto; flex: none;
+  width: 34px; height: 34px; line-height: 1;
+  background: transparent; border: var(--rule) solid var(--hair);
+  color: var(--ash); font-size: 1rem;
+  transition: color var(--dur) var(--ease), border-color var(--dur) var(--ease);
+}
+.drawer__close:hover { color: var(--bone); border-color: var(--bone); }
+
+.drawer__body { padding: 1.4rem; overflow-y: auto; flex: 1; }
+.drawer__lead { margin: 0 0 1.4rem; font-size: 1rem; line-height: 1.6; }
+
+.drawer__h {
+  font-family: var(--font-mono); font-size: 0.62rem;
+  letter-spacing: 0.2em; text-transform: uppercase; color: var(--ash-dim);
+  margin: 1.8rem 0 0.85rem;
+  padding-bottom: 0.5rem; border-bottom: var(--rule) solid var(--hair-soft);
+}
+
+.facts { list-style: none; margin: 0; padding: 0; }
+.facts li {
+  position: relative; padding-left: 1.5rem; margin-bottom: 0.85rem;
+  color: #d2d2d2; font-size: 0.94rem; line-height: 1.5;
+}
+/* conectorul hărții devine bullet */
+.facts li::before {
+  content: ""; position: absolute; left: 0; top: 0.62em;
+  width: 12px; height: var(--rule); background: var(--hair);
+}
+.facts li::after {
+  content: ""; position: absolute; left: 0; top: calc(0.62em - 2px);
+  width: 5px; height: 5px; background: var(--blood-hot);
+}
+
+.links { display: flex; flex-direction: column; gap: 0.3rem; }
+.link-row {
+  display: grid; grid-template-columns: auto 1fr; gap: 0.7rem;
+  align-items: baseline; text-align: left; width: 100%;
+  background: transparent; border: 0; border-bottom: var(--rule) solid var(--hair-soft);
+  padding: 0.7rem 0.2rem;
+  transition: background var(--dur) var(--ease), padding-left var(--dur) var(--ease);
+}
+.link-row:hover { background: rgba(255, 255, 255, 0.04); padding-left: 0.6rem; }
+.link-row__dir {
+  font-family: var(--font-mono); font-size: 0.62rem; color: var(--blood-hot);
+  letter-spacing: 0.08em;
+}
+.link-row__rel { font-style: italic; color: var(--ash); font-size: 0.86rem; display: block; }
+.link-row__to { font-family: var(--font-cond); font-weight: 700; font-size: 1.05rem; letter-spacing: 0.01em; }
+
+.badge {
+  display: inline-block; font-family: var(--font-mono); font-size: 0.58rem;
+  letter-spacing: 0.16em; text-transform: uppercase;
+  padding: 0.25rem 0.5rem; border: var(--rule) solid var(--hair); color: var(--ash-dim);
+}
+
+/* ---------- 7. CRONOLOGIE ---------- */
+.timeline { position: relative; padding-left: clamp(1.2rem, 4vw, 3rem); }
+.timeline::before {
+  content: ""; position: absolute; left: 0; top: 0.4rem; bottom: 0.4rem;
+  width: var(--rule); background: var(--hair);
+}
+.tl-item { position: relative; padding: 0 0 clamp(2.2rem, 4vw, 3.4rem); }
+.tl-item::before {
+  content: ""; position: absolute;
+  left: calc(clamp(1.2rem, 4vw, 3rem) * -1); top: 0.75rem;
+  width: clamp(0.9rem, 3vw, 2.2rem); height: var(--rule); background: var(--hair);
+}
+.tl-item::after {
+  content: ""; position: absolute;
+  left: calc(clamp(1.2rem, 4vw, 3rem) * -1 - 3px); top: calc(0.75rem - 3px);
+  width: 7px; height: 7px; background: var(--blood-hot);
+}
+.tl-year {
+  font-family: var(--font-mono); font-size: 0.72rem;
+  letter-spacing: 0.18em; text-transform: uppercase; color: var(--blood-hot);
+}
+.tl-title {
+  margin: 0.5rem 0 0.7rem;
+  font-family: var(--font-cond); font-weight: 800;
+  font-size: clamp(1.5rem, 3.4vw, 2.4rem); line-height: 1;
+  letter-spacing: 0.005em; text-transform: uppercase;
+}
+.tl-body { margin: 0; max-width: 72ch; color: #c4c4c4; }
+.tl-tags { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-top: 1rem; }
+.tl-tag {
+  font-family: var(--font-mono); font-size: 0.6rem;
+  letter-spacing: 0.12em; text-transform: uppercase;
+  padding: 0.35rem 0.6rem; background: transparent;
+  border: var(--rule) solid var(--hair); color: var(--ash);
+  transition: color var(--dur) var(--ease), border-color var(--dur) var(--ease);
+}
+.tl-tag:hover { color: var(--bone); border-color: var(--blood-hot); }
+
+/* ---------- 8. CIFRE ---------- */
+.figures {
+  display: grid; gap: var(--rule);
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  background: var(--hair-soft);
+  border: var(--rule) solid var(--hair-soft);
+}
+.figure { background: var(--ink); padding: clamp(1.5rem, 3vw, 2.4rem); }
+.figure__value {
+  font-family: var(--font-plate); font-size: clamp(2rem, 4.4vw, 3.4rem);
+  line-height: 0.95; letter-spacing: -0.03em; color: var(--blood-hot);
+  font-variant-numeric: tabular-nums;
+}
+.figure__label { margin: 0.9rem 0 0; font-size: 1.02rem; line-height: 1.4; }
+.figure__note {
+  margin: 0.55rem 0 0; color: var(--ash-dim); font-size: 0.85rem; line-height: 1.45;
+}
+
+/* ---------- 9. HARTA ORIGINALĂ ---------- */
+.origin__frame { border: var(--rule) solid var(--hair); background: var(--board); overflow: hidden; }
+.origin__frame img { display: block; width: 100%; height: auto; }
+
+/* ---------- 10. SUBSOL ---------- */
+.footer { padding: clamp(3rem, 6vw, 5rem) 0 3rem; }
+.notice {
+  border-left: 2px solid var(--blood);
+  padding: 0.2rem 0 0.2rem 1.2rem;
+  max-width: 76ch; color: var(--ash); font-size: 0.95rem;
+}
+.footer__meta {
+  margin-top: 2.5rem; padding-top: 1.5rem;
+  border-top: var(--rule) solid var(--hair-soft);
+  display: flex; flex-wrap: wrap; gap: 1.5rem;
+  font-family: var(--font-mono); font-size: 0.64rem;
+  letter-spacing: 0.14em; text-transform: uppercase; color: var(--ash-dim);
+}
+
+/* ---------- 11. RESPONSIVE ---------- */
+@media (max-width: 860px) {
+  .topbar__nav a { padding: 0.35rem 0.5rem; font-size: 0.62rem; }
+  .map__stage { height: 62vh; }
+  .drawer { width: 100%; }
+}
+@media (max-width: 560px) {
+  .topbar__mark { font-size: 0.68rem; }
+  .map__zoom { margin-left: 0; }
+}
+
+/* ---------- 12. MIȘCARE REDUSĂ ---------- */
+@media (prefers-reduced-motion: reduce) {
+  .topbar { transition: none; }
+  .hero__web { opacity: 0.16; }
+  * { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; }
+}
