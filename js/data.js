@@ -147,18 +147,6 @@ const NODES = [
     src: "harta"
   },
   {
-    id: "sri", kind: "office", x: 118, y: 142,
-    label: ["S.R.I."],
-    role: "Filiera din spatele numirilor.",
-    lead: "Doi dintre directorii Companiei de Apă Olt vin pe filiera serviciilor. Documentarul ridică întrebarea protecției informative de care s-ar fi bucurat rețeaua.",
-    facts: [
-      "Vasile Covaciu, socrul lui Emil Moț, este fost angajat SRI.",
-      "Marius Cătălin Ușurelu ajunge tot director al Companiei de Apă Olt.",
-      "Documentarul întreabă de ce rețeaua PSD Olt a fost lăsată în pace atâția ani."
-    ],
-    src: "harta"
-  },
-  {
     id: "coldea", kind: "person", x: 150, y: 312,
     label: ["Florian", "COLDEA"],
     role: "Numele care aduce în discuție protecția informativă.",
@@ -167,6 +155,7 @@ const NODES = [
       "Legătura apare pe hartă ca sprijin acordat Marinei Pandarov.",
       "Ridică întrebarea de ce rețeaua PSD Olt nu a fost deranjată ani la rând."
     ],
+    affil: ["SRI"],
     src: "harta"
   },
   {
@@ -192,7 +181,7 @@ const NODES = [
       "Interceptările din dosar surprind negocierea cantităților.",
       "Este fostul director al companiei de apă din Slatina din relatările de presă."
     ],
-    affil: ["PSD","SRI"],
+    affil: ["PSD"],
     src: "harta"
   },
   {
@@ -456,17 +445,7 @@ const EDGES = [
 
 
   { from: "titiriga", to: "sorin", label: "fostul șofer al tatălui lui", route: "hvh", mid: 1256,
-    detail: "Legătura care arată cât de scurtă e distanța dintre firmele care par independente: administratorul Wagramer a fost șofer la compania Condor Păduraru.", src: "harta" },
-
-
-
-
-
-  { from: "sri", to: "covaciu", label: "filiera numirilor", route: "vhv", mid: 566,
-    detail: "Pe filiera SRI ajung la conducerea Companiei de Apă Olt atât Vasile Covaciu, cât și Marius Cătălin Ușurelu.", src: "harta" },
-
-  { from: "sri", to: "usurelu", label: "filiera numirilor", route: "line",
-    detail: "Documentarul întreabă de ce rețeaua PSD Olt a fost lăsată în pace atâția ani.", src: "harta" }
+    detail: "Legătura care arată cât de scurtă e distanța dintre firmele care par independente: administratorul Wagramer a fost șofer la compania Condor Păduraru.", src: "harta" }
 ];
 
 /* ---------- CRONOLOGIE ---------- */
@@ -508,6 +487,12 @@ const FIGURES = [
   { value: 10, prefix: "", suffix: " %", label: "comisionul de pe harta rețelei",
     note: "achitat de constructorul de casă către președintele CJ" }
 ];
+
+/* afilierile stau în bara de filtre, lângă tipuri */
+const AFFIL_META = {
+  "PSD": { label: "PSD" },
+  "SRI": { label: "SRI" }
+};
 
 const KIND_META = {
   "person":          { label: "Persoană",           short: "PERS" },

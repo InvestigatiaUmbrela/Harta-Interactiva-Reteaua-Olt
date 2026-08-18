@@ -11,9 +11,11 @@ const GRAPH = {
     14
    ],
    "facets": {
+    "PSD": [
+     3
+    ],
     "person": [
      0,
-     3,
      14
     ]
    },
@@ -46,9 +48,11 @@ const GRAPH = {
     6
    ],
    "facets": {
+    "PSD": [
+     10
+    ],
     "person": [
      7,
-     10,
      26
     ],
     "office": [
@@ -95,21 +99,6 @@ const GRAPH = {
    "h": 284.9
   },
   {
-   "id": "sri",
-   "els": [
-    21
-   ],
-   "facets": {
-    "office": [
-     21
-    ]
-   },
-   "x": 372,
-   "y": 474,
-   "w": 201,
-   "h": 201
-  },
-  {
    "id": "spital",
    "els": [
     24
@@ -133,9 +122,11 @@ const GRAPH = {
     27
    ],
    "facets": {
+    "PSD": [
+     41
+    ],
     "person": [
      35,
-     41,
      64
     ],
     "office": [
@@ -151,18 +142,22 @@ const GRAPH = {
    "id": "coldea",
    "els": [
     36,
+    21,
     49
    ],
    "facets": {
+    "SRI": [
+     21
+    ],
     "person": [
      36,
      49
     ]
    },
-   "x": 389.5,
-   "y": 684,
-   "w": 166.5,
-   "h": 205.3
+   "x": 372,
+   "y": 474,
+   "w": 201,
+   "h": 415.3
   },
   {
    "id": "pandarof",
@@ -190,9 +185,11 @@ const GRAPH = {
     43
    ],
    "facets": {
+    "PSD": [
+     57
+    ],
     "person": [
      54,
-     57,
      74
     ],
     "office": [
@@ -213,9 +210,11 @@ const GRAPH = {
     44
    ],
    "facets": {
+    "PSD": [
+     58
+    ],
     "person": [
      55,
-     58,
      73
     ],
     "office": [
@@ -283,9 +282,11 @@ const GRAPH = {
     87
    ],
    "facets": {
+    "SRI": [
+     94
+    ],
     "person": [
      91,
-     94,
      113,
      84,
      87
@@ -306,9 +307,11 @@ const GRAPH = {
     86
    ],
    "facets": {
+    "PSD": [
+     97
+    ],
     "person": [
      92,
-     97,
      112,
      83,
      86

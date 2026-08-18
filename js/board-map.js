@@ -15,6 +15,7 @@ class BoardMap {
     this.onSelect = () => {};
     this.selected = null;
     this.filters = new Set();
+    this.drift = 0;          // deplasarea lentă a grilei din fundal
 
     /* Grila din spate se mișcă și se apropie la o cincime din viteza
        plansei — destul cât să dea adâncime, prea puțin cât să distragă. */
@@ -41,6 +42,7 @@ class BoardMap {
     this.drawHotspots();
     this.bindPanZoom();
     this.fit();
+    this.run();
   }
 
   /* ---------- 1. plansa ---------- */
@@ -254,52 +256,54 @@ class BoardMap {
       const cell = 46 * gk;
       this.grid.style.backgroundSize =
         `${cell}px ${cell}px, ${cell}px ${cell}px, ${cell * 5}px ${cell * 5}px, ${cell * 5}px ${cell * 5}px`;
-      const gx = x * P, gy = y * P;
+      const gx = x * P + (this.drift || 0), gy = y * P;
       this.grid.style.backgroundPosition =
         `${gx}px ${gy}px, ${gx}px ${gy}px, ${gx}px ${gy}px, ${gx}px ${gy}px`;
     }
   }
 
-  clampView() {
+  /* Marginile: planșa nu poate fi trasă afară din cadru. Lăsăm doar o
+     ramă mică de respiro, cât să nu pară lipită de bord. */
+  clamp(v = this.view) {
     const r = this.stage.getBoundingClientRect();
-    const w = BOARD.width * this.view.k, h = BOARD.height * this.view.k;
-    const slackX = Math.max(0, (r.width - w) / 2);
-    const slackY = Math.max(0, (r.height - h) / 2);
-    const marginX = Math.min(r.width * 0.5, 240);
-    const marginY = Math.min(r.height * 0.5, 240);
+    const w = BOARD.width * v.k, h = BOARD.height * v.k;
+    const airX = Math.min(r.width * 0.08, 64);
+    const airY = Math.min(r.height * 0.08, 64);
 
-    this.view.x = w <= r.width ? slackX
-      : Math.min(marginX, Math.max(r.width - w - marginX, this.view.x));
-    this.view.y = h <= r.height ? slackY
-      : Math.min(marginY, Math.max(r.height - h - marginY, this.view.y));
+    v.x = w <= r.width ? (r.width - w) / 2
+      : Math.min(airX, Math.max(r.width - w - airX, v.x));
+    v.y = h <= r.height ? (r.height - h) / 2
+      : Math.min(airY, Math.max(r.height - h - airY, v.y));
+    return v;
   }
 
   fit() {
     const r = this.stage.getBoundingClientRect();
     const whole = Math.min(r.width / BOARD.width, r.height / BOARD.height);
-    this.minK = whole * 0.9;
-    this.baseK = whole;      // reper pentru zoom-ul amortizat al grilei
 
-    /* Pe ecran mic, plansa întreagă ar fi ilizibilă. Pornim de la un zoom
-       la care numele se citesc, ancorat în colțul de sus-stânga, de unde
-       începe povestea; restul se navighează cu degetul. */
+    this.minK = whole;              // mai departe de-atât n-are rost: se vede tot
+    this.maxK = Math.max(whole * 8, 1.6);
+    this.baseK = whole;             // reper pentru zoom-ul amortizat al grilei
+
+    /* Pe ecran mic, planșa întreagă ar fi ilizibilă. Pornim de la un zoom
+       la care numele se citesc; restul se navighează cu degetul. */
     const small = r.width < 620;
     const k = small ? Math.max(whole, 0.3) : whole;
 
-    this.view = { k, x: 0, y: 0 };
-    if (small && k > whole) { this.view.x = -40 * k; this.view.y = -20 * k; }
-    this.clampView();
+    this.view = this.clamp({ k, x: 0, y: 0 });
+    this.target = { ...this.view };
     this.apply();
   }
 
   zoomAt(factor, px, py) {
-    const k = Math.min(6, Math.max(this.minK, this.view.k * factor));
-    const ratio = k / this.view.k;
-    this.view.x = px - (px - this.view.x) * ratio;
-    this.view.y = py - (py - this.view.y) * ratio;
-    this.view.k = k;
-    this.clampView();
-    this.apply();
+    const t = this.target;
+    const k = Math.min(this.maxK, Math.max(this.minK, t.k * factor));
+    const ratio = k / t.k;
+    t.x = px - (px - t.x) * ratio;
+    t.y = py - (py - t.y) * ratio;
+    t.k = k;
+    this.clamp(t);
+    this.run();
   }
 
   zoomBy(factor) {
@@ -313,12 +317,40 @@ class BoardMap {
     const en = GRAPH.entities.find(e => e.id === id);
     if (!en) return;
     const r = this.stage.getBoundingClientRect();
-    const k = Math.min(6, Math.max(this.minK, zoom || Math.max(this.view.k, 0.55)));
-    this.view.k = k;
-    this.view.x = r.width / 2 - (en.x + en.w / 2) * k;
-    this.view.y = r.height / 2 - (en.y + en.h / 2) * k;
-    this.clampView();
-    this.apply();
+    const k = Math.min(this.maxK, Math.max(this.minK, zoom || Math.max(this.view.k, 0.55)));
+    this.target.k = k;
+    this.target.x = r.width / 2 - (en.x + en.w / 2) * k;
+    this.target.y = r.height / 2 - (en.y + en.h / 2) * k;
+    this.clamp(this.target);
+    this.run();
+  }
+
+  /* O singură buclă, pornită o dată. Duce vederea spre țintă — de aici
+     vine alunecarea, mișcarea se stinge în loc să se oprească sec — și
+     tot ea plimbă grila, foarte încet, spre stânga.
+     Două bucle separate ar scădea amândouă deriva, deci ar dubla viteza. */
+  run() {
+    if (this.raf) return;
+    let prev = performance.now();
+
+    const step = now => {
+      const dt = Math.min((now - prev) / 1000, 0.1);
+      prev = now;
+
+      const v = this.view, t = this.target, e = 0.16;
+      v.x += (t.x - v.x) * e;
+      v.y += (t.y - v.y) * e;
+      v.k += (t.k - v.k) * e;
+
+      if (Math.abs(t.x - v.x) < 0.15) v.x = t.x;
+      if (Math.abs(t.y - v.y) < 0.15) v.y = t.y;
+      if (Math.abs(t.k - v.k) < 0.0002) v.k = t.k;
+
+      this.drift -= 4 * dt;          // ~4 px pe secundă, indiferent de framerate
+      this.apply();
+      this.raf = requestAnimationFrame(step);
+    };
+    this.raf = requestAnimationFrame(step);
   }
 
   bindPanZoom() {
@@ -333,6 +365,8 @@ class BoardMap {
     this.stage.addEventListener("pointerdown", ev => {
       pts.set(ev.pointerId, local(ev));
       this.dragged = false;
+      this.dragging = true;
+      this.vel = { x: 0, y: 0 };
       if (pts.size === 1) {
         last = local(ev);
         this.stage.setPointerCapture(ev.pointerId);
@@ -355,9 +389,10 @@ class BoardMap {
         const dist = Math.hypot(a.x - b.x, a.y - b.y);
         const mid = { x: (a.x + b.x) / 2, y: (a.y + b.y) / 2 };
         if (pinch.dist > 0) this.zoomAt(dist / pinch.dist, mid.x, mid.y);
-        this.view.x += mid.x - pinch.mid.x;
-        this.view.y += mid.y - pinch.mid.y;
-        this.clampView();
+        this.target.x += mid.x - pinch.mid.x;
+        this.target.y += mid.y - pinch.mid.y;
+        this.clamp(this.target);
+        this.view.x = this.target.x; this.view.y = this.target.y;
         this.apply();
         pinch = { dist, mid };
         this.dragged = true;
@@ -368,10 +403,16 @@ class BoardMap {
         const p = local(ev);
         const dx = p.x - last.x, dy = p.y - last.y;
         if (Math.abs(dx) + Math.abs(dy) > 3) this.dragged = true;
-        this.view.x += dx;
-        this.view.y += dy;
+
+        /* În timpul tragerii, planșa urmează degetul 1:1 — orice lag ar
+           părea o defecțiune. Reținem viteza pentru alunecarea de la final. */
+        this.target.x += dx;
+        this.target.y += dy;
+        this.clamp(this.target);
+        this.view.x = this.target.x;
+        this.view.y = this.target.y;
+        this.vel = { x: dx, y: dy };
         last = p;
-        this.clampView();
         this.apply();
       }
     });
@@ -381,8 +422,18 @@ class BoardMap {
       if (pts.size < 2) pinch = null;
       if (pts.size === 0) {
         last = null;
+        this.dragging = false;
         this.stage.classList.remove("is-panning");
         try { this.stage.releasePointerCapture(ev.pointerId); } catch (_) {}
+
+        // alunecarea: mișcarea se stinge, nu se oprește sec
+        const v = this.vel || { x: 0, y: 0 };
+        if (Math.hypot(v.x, v.y) > 1.5) {
+          this.target.x += v.x * 7;
+          this.target.y += v.y * 7;
+          this.clamp(this.target);
+        }
+        this.run();
         setTimeout(() => { this.dragged = false; }, 0);
       } else {
         last = [...pts.values()][0];

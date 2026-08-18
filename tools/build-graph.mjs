@@ -36,11 +36,10 @@ const MEMBERS = {
                    sec: { kind: "office", txt: ["ANIF Min. Agriculturii"] } },
   carmin:        { img: ["CARMIN WHITE 2"], txt: [["Companie PRIVATĂ", 3580, 296]] },
   mariana:       { img: ["Mariana"], txt: ["Mariana MOȚ"] },
-  sri:           { img: ["SRI WHITE 4"] },
   spital:        { txt: ["Spitalul JUDEȚEAN Slatina"] },
   oprescu:       { img: ["Opresk", "PSD WHITE 5"], txt: ["Marius OPRESCU"],
                    sec: { kind: "office", txt: ["Președinte CJ OLT"] } },
-  coldea:        { img: ["Coldea"], txt: ["Florian COLDEA"] },
+  coldea:        { img: ["Coldea", "SRI WHITE 4"], txt: ["Florian COLDEA"] },
   pandarof:      { img: ["Pandarof"], txt: ["Marina PANDAROF"] },
   emilmot:       { img: ["Mot", "PSD WHITE 7"], txt: ["Emil MOȚ"],
                    sec: { kind: "office", txt: ["Primar SLATINA"] } },
@@ -111,8 +110,24 @@ for (const [id, def] of Object.entries(MEMBERS)) {
   if (def.sec) pick(id, def.sec, secEls);
 
   const idx = [...main, ...secEls];
+
+  /* Siglele PSD și SRI formează fațete proprii, ca filtrul de afiliere
+     să le aprindă exact pe ele, nu tot omul. */
+  const affilOf = i => {
+    const n = els[i].name || "";
+    if (/^PSD/i.test(n)) return "PSD";
+    if (/^SRI/i.test(n)) return "SRI";
+    return null;
+  };
+
   const facets = {};
-  if (main.length) facets[NODE_KIND[id] || "person"] = main;
+  const own = [];
+  for (const i of main) {
+    const a = affilOf(i);
+    if (a) (facets[a] = facets[a] || []).push(i);
+    else own.push(i);
+  }
+  if (own.length) facets[NODE_KIND[id] || "person"] = own;
   if (secEls.length) facets[def.sec.kind] = (facets[def.sec.kind] || []).concat(secEls);
 
   if (!idx.length) { warn.push(`${id}: NICIUN element`); continue; }
