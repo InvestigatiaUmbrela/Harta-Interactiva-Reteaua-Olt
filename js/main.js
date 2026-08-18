@@ -398,15 +398,13 @@ function animate(map) {
     ScrollTrigger.create({
       trigger: "#harta", start: "top 65%", once: true,
       onEnter: () => {
-        // săgețile se trag, apoi apar numele și portretele
-        gsap.from(".wire", {
-          opacity: 0, duration: 0.5, ease: "power2.out",
-          stagger: { each: 0.02, from: "start" }
-        });
-        gsap.from(".sprite:not(.sprite--decor)", {
-          opacity: 0, duration: 0.5, ease: "power2.out",
-          stagger: { each: 0.012, from: "random" }, delay: 0.15
-        });
+        /* Plansa intră ca un tot. Nu animăm elementele una câte una:
+           dacă un tween se blochează, harta rămâne invisibilă — preț
+           mult prea mare pentru o intrare. */
+        gsap.fromTo(".map__stage",
+          { opacity: 0, y: 18 },
+          { opacity: 1, y: 0, duration: 0.7, ease: "power3.out",
+            clearProps: "opacity,transform" });
       }
     });
 
@@ -456,6 +454,33 @@ function boot() {
   });
 
   animate(map);
+
+  /* Plansa are 148 de imagini. Până se încarcă, înălțimea paginii se tot
+     schimbă, iar ScrollTrigger ajunge să calculeze declanșări imposibile
+     (start negativ). Remăsurăm după ce totul e pe ecran. */
+  const remeasure = () => { if (ScrollTrigger) ScrollTrigger.refresh(); };
+  window.addEventListener("load", remeasure);
+
+  const imgs = $$(".board .sprite");
+  let pending = imgs.filter(i => !i.complete).length;
+  if (pending) {
+    imgs.forEach(i => {
+      if (i.complete) return;
+      const done = () => { if (--pending === 0) remeasure(); };
+      i.addEventListener("load", done, { once: true });
+      i.addEventListener("error", done, { once: true });
+    });
+  }
+
+  /* Plasă de siguranță: nimic din ce e decorativ nu are voie să lase
+     harta ascunsă. Dacă un tween rămâne agățat, curățăm opacitatea. */
+  setTimeout(() => {
+    $$(".board .sprite, .board .wire").forEach(el => {
+      if (el.style.opacity !== "" && parseFloat(el.style.opacity) < 1) {
+        el.style.opacity = "";
+      }
+    });
+  }, 4000);
 }
 
 if (document.readyState === "loading") {
