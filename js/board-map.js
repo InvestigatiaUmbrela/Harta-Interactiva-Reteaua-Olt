@@ -381,10 +381,21 @@ class BoardMap {
     const sync = () => {
       const on = this.isFull();
       button.setAttribute("aria-pressed", String(on));
-      button.textContent = on ? "Ieși" : "Tot ecranul";
+      button.setAttribute("aria-label", on ? "Ieși din tot ecranul" : "Tot ecranul");
+      button.classList.toggle("is-on", on);   // CSS comută cele două simboluri
     };
 
-    button.addEventListener("click", () => { this.toggleFullscreen(); sync(); });
+    // apăsarea pe buton nu e început de tragere a plansei
+    button.addEventListener("pointerdown", ev => ev.stopPropagation());
+
+    /* Nativul răspunde printr-o promisiune, iar rezerva intră în catch —
+       amândouă după ce sync() a rulat deja. Mai sincronizăm o dată după. */
+    button.addEventListener("click", () => {
+      this.toggleFullscreen();
+      sync();
+      setTimeout(sync, 120);
+      setTimeout(sync, 400);
+    });
 
     ["fullscreenchange", "webkitfullscreenchange"].forEach(e =>
       document.addEventListener(e, () => { this.fit(); sync(); }));
@@ -464,7 +475,10 @@ class BoardMap {
       if (pts.size === 1) {
         last = local(ev);
         downAt = local(ev);
-        this.stage.setPointerCapture(ev.pointerId);
+        /* Fără captură aici. Cu captura pusă la apăsare, browserul
+           retintește ridicarea către scenă, iar click-ul se naște pe
+           scenă — nu pe butonul apăsat — și fișele nu se mai deschid
+           la mouse. Captura se pune abia când tragerea chiar începe. */
         this.stage.classList.add("is-panning");
       } else if (pts.size === 2) {
         const [a, b] = [...pts.values()];
@@ -507,8 +521,11 @@ class BoardMap {
       if (pts.size === 1 && last) {
         const p = local(ev);
         const dx = p.x - last.x, dy = p.y - last.y;
-        if (downAt && Math.hypot(p.x - downAt.x, p.y - downAt.y) > DRAG_SLOP) {
+        if (!this.dragged && downAt &&
+            Math.hypot(p.x - downAt.x, p.y - downAt.y) > DRAG_SLOP) {
           this.dragged = true;
+          // abia acum e tragere: ținem pointerul chiar dacă iese din scenă
+          try { this.stage.setPointerCapture(ev.pointerId); } catch (_) {}
         }
 
         /* În timpul tragerii, planșa urmează degetul 1:1 — orice lag ar

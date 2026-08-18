@@ -601,9 +601,6 @@ function boot() {
     map.focus(id, 1.7);
   });
 
-  $("#zoom-in").addEventListener("click", () => map.zoomBy(1.25));
-  $("#zoom-out").addEventListener("click", () => map.zoomBy(1 / 1.25));
-  $("#zoom-reset").addEventListener("click", () => { map.reset(); map.clear(); });
   map.bindFullscreen($("#map-full"));
 
   document.addEventListener("keydown", ev => {
