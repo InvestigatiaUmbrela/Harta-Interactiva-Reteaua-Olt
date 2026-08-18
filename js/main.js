@@ -504,27 +504,74 @@ function animate(map) {
 }
 
 /* ============================================================
-   9. PORNIRE
+   9. PAGINA SE DESCHIDE DE SUS
+   ============================================================ */
+/* Browserul reține unde ai rămas și resetează singur `scrollRestoration`
+   pe „auto” după ce finalizează intrarea din istoric — deci nu e de ajuns
+   să i-o cerem o dată. Insistăm la câteva momente cheie, dar ne oprim în
+   clipa în care atingi tu ecranul: n-are rost să te tragem înapoi sus
+   dacă deja citești. */
+function startAtTop() {
+  if (location.hash) return;
+
+  let userMoved = false;
+  const mark = () => { userMoved = true; };
+  ["wheel", "touchstart", "keydown", "pointerdown"].forEach(e =>
+    window.addEventListener(e, mark, { passive: true, once: true }));
+
+  const manual = () => {
+    try {
+      if ("scrollRestoration" in history) history.scrollRestoration = "manual";
+    } catch (_) {}
+  };
+
+  const top = () => {
+    if (userMoved || window.scrollY === 0) return;
+    // „instant”, altfel scroll-behavior: smooth ar anima drumul înapoi
+    try { window.scrollTo({ top: 0, left: 0, behavior: "instant" }); }
+    catch (_) { window.scrollTo(0, 0); }
+  };
+
+  manual(); top();
+  requestAnimationFrame(() => { manual(); top(); });
+  window.addEventListener("load", () => { manual(); top(); }, { once: true });
+  [120, 400, 900, 1800].forEach(ms => setTimeout(top, ms));
+
+  // revenirea în filă din memoria de fundal a telefonului
+  window.addEventListener("pageshow", ev => { if (ev.persisted) { manual(); top(); } });
+}
+
+/* ============================================================
+   10. BARA DE PROGRES
+   ============================================================ */
+function mountProgress() {
+  const bar = $("#progress i");
+  if (!bar) return;
+
+  let ticking = false;
+  const draw = () => {
+    ticking = false;
+    const h = document.documentElement.scrollHeight - window.innerHeight;
+    const p = h > 0 ? Math.min(1, Math.max(0, window.scrollY / h)) : 0;
+    bar.style.transform = `scaleX(${p})`;
+  };
+
+  addEventListener("scroll", () => {
+    if (ticking) return;
+    ticking = true;
+    requestAnimationFrame(draw);
+  }, { passive: true });
+
+  addEventListener("resize", draw, { passive: true });
+  draw();
+}
+
+/* ============================================================
+   11. PORNIRE
    ============================================================ */
 function boot() {
-  /* Pagina se deschide de sus. Browserul își amintește altfel unde ai
-     rămas, iar pe telefon planșa crește pe măsură ce se încarcă cele 108
-     imagini — așa că poziția memorată te lasă undeva la mijloc. */
-  if ("scrollRestoration" in history) history.scrollRestoration = "manual";
-  if (!location.hash) {
-    window.scrollTo(0, 0);
-    requestAnimationFrame(() => window.scrollTo(0, 0));
-    window.addEventListener("load", () => {
-      if (!location.hash) window.scrollTo(0, 0);
-    }, { once: true });
-
-    /* Când revii în filă, telefonul o scoate din memoria de fundal cu tot
-       cu poziția veche. Asta e situația în care ajungi la mijlocul paginii. */
-    window.addEventListener("pageshow", ev => {
-      if (ev.persisted && !location.hash) window.scrollTo(0, 0);
-    });
-  }
-
+  startAtTop();
+  mountProgress();
   mountVideo();
   mountFigures();
   mountHeroWeb();
