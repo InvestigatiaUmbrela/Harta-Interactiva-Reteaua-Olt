@@ -284,12 +284,23 @@ function mountHeroWeb() {
     const mid = e.route === "vhv" ? { x: a.x, y: e.mid !== undefined ? e.mid : (a.y + b.y) / 2 }
               : e.route === "hvh" ? { x: e.mid !== undefined ? e.mid : (a.x + b.x) / 2, y: a.y }
               : { x: a.x, y: b.y };
-    const p = document.createElementNS(ns, "path");
-    p.setAttribute("d",
+    const d =
       e.route === "vhv" ? `M ${a.x} ${a.y} L ${mid.x} ${mid.y} L ${b.x} ${mid.y} L ${b.x} ${b.y}`
     : e.route === "hvh" ? `M ${a.x} ${a.y} L ${mid.x} ${mid.y} L ${mid.x} ${b.y} L ${b.x} ${b.y}`
-    : `M ${a.x} ${a.y} L ${mid.x} ${mid.y} L ${b.x} ${b.y}`);
-    frag.append(p);
+    : `M ${a.x} ${a.y} L ${mid.x} ${mid.y} L ${b.x} ${b.y}`;
+
+    /* Două trasee suprapuse: unul e linia în sine, celălalt un segment
+       scurt care circulă pe ea. Așa rețeaua rămâne vie, nu doar se
+       desenează o dată la încărcare. */
+    const base = document.createElementNS(ns, "path");
+    base.setAttribute("class", "web-base");
+    base.setAttribute("d", d);
+    frag.append(base);
+
+    const pulse = document.createElementNS(ns, "path");
+    pulse.setAttribute("class", "web-pulse");
+    pulse.setAttribute("d", d);
+    frag.append(pulse);
   });
 
   NODES.forEach(n => {
@@ -330,7 +341,7 @@ function animate(map) {
   mm.add("(prefers-reduced-motion: no-preference)", () => {
 
     /* --- deschiderea: pânza se trage, apoi titlul --- */
-    const web = $$("#hero-web path");
+    const web = $$("#hero-web .web-base");
     web.forEach(p => {
       const len = p.getTotalLength();
       gsap.set(p, { strokeDasharray: len, strokeDashoffset: len });
@@ -353,7 +364,38 @@ function animate(map) {
       }, 0.4)
       .from(".hero__lede", { opacity: 0, y: 24, duration: 0.8 }, "-=0.5")
       .from(".hero__cta > *", { opacity: 0, y: 18, duration: 0.6, stagger: 0.08 }, "-=0.45")
-      .from(".hero__scroll", { opacity: 0, duration: 0.6 }, "-=0.3");
+      .from(".hero__scroll", { opacity: 0, duration: 0.6 }, "-=0.3")
+      .add(() => startPulses(), "-=0.8");
+
+    /* Impulsuri care circulă continuu prin rețea. Fiecare traseu primește
+       un segment scurt care îl parcurge la nesfârșit, cu porniri decalate,
+       ca să nu bată toate în același ritm. */
+    let pulseLoop = null;
+    function startPulses() {
+      if (pulseLoop) return;
+      const pulses = $$("#hero-web .web-pulse");
+      if (!pulses.length) return;
+
+      pulseLoop = gsap.timeline({ repeat: -1 });
+      pulses.forEach((p, i) => {
+        const len = p.getTotalLength();
+        const dash = Math.min(90, Math.max(28, len * 0.12));
+        gsap.set(p, { strokeDasharray: `${dash} ${len}`, strokeDashoffset: dash });
+        pulseLoop.to(p, {
+          strokeDashoffset: -len,
+          duration: 3.2 + (len / 900),
+          ease: "none",
+          repeat: -1,
+          repeatDelay: 1.4
+        }, i * 0.09);
+      });
+
+      /* nu ardem baterie când pânza nu se vede */
+      ScrollTrigger.create({
+        trigger: ".hero", start: "top bottom", end: "bottom top",
+        onToggle: self => self.isActive ? pulseLoop.play() : pulseLoop.pause()
+      });
+    }
 
     /* --- linia roșie de sub fiecare titlu de secțiune --- */
     $$(".section__rule").forEach(rule => {

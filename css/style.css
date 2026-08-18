@@ -28,7 +28,7 @@
   --step-1: clamp(1.15rem, 1.05rem + 0.4vw, 1.4rem);
   --step-2: clamp(1.6rem, 1.3rem + 1.2vw, 2.4rem);
   --step-3: clamp(2.2rem, 1.6rem + 2.8vw, 4.2rem);
-  --step-4: clamp(3rem, 1.6rem + 6.4vw, 8.5rem);
+  --step-4: clamp(2.1rem, 0.5rem + 8.2vw, 8.5rem);
 
   --gut: clamp(1.25rem, 4vw, 4.5rem);
   --rule: 1px;
@@ -145,8 +145,14 @@ button { font: inherit; color: inherit; cursor: pointer; }
   opacity: 0.3;
   pointer-events: none;
 }
-.hero__web path { fill: none; stroke: var(--bone); stroke-width: 1; }
-.hero__web circle { fill: var(--blood); }
+.hero__web path { fill: none; stroke-width: 1; }
+.hero__web .web-base { stroke: rgba(255, 255, 255, 0.42); }
+/* impulsul care circulă: mai gros, mai luminos, cu urmă */
+.hero__web .web-pulse {
+  stroke: var(--bone); stroke-width: 1.8; stroke-linecap: round;
+  filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.75));
+}
+.hero__web circle { fill: var(--blood-hot); filter: drop-shadow(0 0 4px rgba(216, 30, 5, 0.6)); }
 
 .hero__inner { position: relative; z-index: 2; width: min(1440px, 100%); margin-inline: auto; }
 
@@ -164,12 +170,19 @@ button { font: inherit; color: inherit; cursor: pointer; }
   margin: 0;
   font-family: var(--font-plate);
   font-size: var(--step-4);
-  line-height: 0.86;
+  line-height: 0.92;
   letter-spacing: -0.025em;
   text-transform: uppercase;
 }
-.hero__title .line { display: block; overflow: hidden; }
-.hero__title .line > span { display: block; }
+.hero__title .line {
+  display: block;
+  overflow: hidden;
+  /* „Rețeaua” are codiță sub linia de bază; cu overflow ascuns și rând
+     strâns, ea s-ar tăia și ar atinge cuvântul de dedesubt */
+  padding-bottom: 0.26em;
+  margin-bottom: -0.2em;
+}
+.hero__title .line > span { display: block; white-space: nowrap; }
 .hero__title .red {
   color: var(--blood-hot);
   text-shadow: 0.055em 0.055em 0 rgba(0, 0, 0, 0.9);
@@ -352,9 +365,17 @@ button { font: inherit; color: inherit; cursor: pointer; }
   position: absolute;
   overflow: visible;
 }
+/* Glow-ul stă pe săgeți, nu pe fiecare imagine: sunt doar 40 de trasee
+   vectoriale, deci costă puțin, iar liniile albe pe negru sunt exact
+   locul unde se vede efectul. */
 .wire__ink {
   fill: var(--bone);
+  filter: drop-shadow(0 0 3px rgba(255, 255, 255, 0.5));
   transition: fill 0.2s var(--ease), opacity 0.25s var(--ease);
+}
+.wire.is-hot .wire__ink,
+.wire.is-selected .wire__ink {
+  filter: drop-shadow(0 0 8px rgba(216, 30, 5, 0.9));
 }
 .wire__hit {
   fill: transparent; stroke: transparent; stroke-width: 26;
@@ -371,7 +392,14 @@ button { font: inherit; color: inherit; cursor: pointer; }
 /* hover: elementul se aprinde */
 .hotspot:hover, .hotspot.is-hot, .hotspot.is-selected {
   background: rgba(153, 0, 0, 0.16);
-  box-shadow: inset 0 0 0 1.5px var(--blood-hot);
+  box-shadow: inset 0 0 0 1.5px var(--blood-hot),
+              0 0 18px rgba(216, 30, 5, 0.35);
+}
+
+/* Un halou discret peste toată planșa, pe ecrane mari. Un singur strat,
+   nu 108 filtre — pe telefon rămâne stins, unde memoria e strâmtă. */
+@media (min-width: 900px) {
+  .board { filter: drop-shadow(0 0 2px rgba(255, 255, 255, 0.22)); }
 }
 .sprite.is-hot, .sprite.is-selected {
   filter: brightness(1.4) contrast(1.08)
