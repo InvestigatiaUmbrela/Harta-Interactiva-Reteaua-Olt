@@ -475,6 +475,9 @@ const EDGES = [
   { from: "oprescu", to: "oldnew", label: "acordă proiecte direct lui", route: "vhv", mid: 646,
     detail: "Contractele merg în ambele sensuri: proiecte publice într-o direcție, comision în cealaltă.", src: "harta" },
 
+  { from: "emilmot", to: "oldnew", label: "acordă proiecte direct lui", route: "vhv", mid: 640,
+    detail: "Firma de construcții Old&New Construct primește lucrări de la Compania de Apă Olt și de la Primăria Slatina. Mircea „Pisicu” Ungureanu, omul din spatele ei, și-a aliniat interesele cu ale baronului local, participând la fondul de protocol al rețelei.", src: "documentar" },
+
   { from: "oprescu", to: "oltdrum", label: "controlează", route: "vhv", mid: 505,
     detail: "Olt Drum este societatea Consiliului Județean Olt. Nu se rezumă la a cumpăra de la firmele grupului: merge cu ele în tandem la licitații.", src: "harta" },
 

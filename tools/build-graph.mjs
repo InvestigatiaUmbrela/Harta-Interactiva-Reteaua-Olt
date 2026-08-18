@@ -230,18 +230,35 @@ function nearest(pt, maxDist) {
 const labelPool = els.map((e, k) => ({ e, k }))
   .filter(({ e, k }) => !claimed.has(k) && e.text);
 
-function labelFor(vec) {
-  const cx = vec.x + vec.w / 2, cy = vec.y + vec.h / 2;
-  let best = null, bestD = Infinity;
-  for (const cand of labelPool) {
-    if (cand.taken) continue;
-    const lx = cand.e.x + cand.e.w / 2, ly = cand.e.y + cand.e.h / 2;
-    // eticheta trebuie să stea pe traseu, nu doar aproape de centrul cutiei
-    const inside = lx >= vec.x - 60 && lx <= vec.x + vec.w + 60 &&
-                   ly >= vec.y - 60 && ly <= vec.y + vec.h + 60;
-    if (!inside) continue;
-    const d = Math.hypot(lx - cx, ly - cy);
-    if (d < bestD) { bestD = d; best = cand; }
+/* Punctele traseului, în coordonate de plansă — eticheta se măsoară
+   față de linia propriu-zisă, nu față de centrul cutiei. O cutie de
+   săgeată în L are centrul în gol, departe de linie. */
+function pathSegments(file, ox, oy) {
+  const svg = load(file);
+  const d = (svg.match(/ d="([^"]+)"/) || [])[1];
+  if (!d) return [];
+  const segs = [];
+  for (const sub of pathSubpaths(d)) {
+    for (let i = 0; i + 1 < sub.pts.length; i++) {
+      const a = sub.pts[i], b = sub.pts[i + 1];
+      segs.push({ ax: ox + a.x, ay: oy + a.y, bx: ox + b.x, by: oy + b.y });
+    }
+  }
+  return segs;
+}
+
+/* distanța de la etichetă până la linie, măsurată pe segment:
+   pe o linie de 1900px, colțurile sunt la capete, iar o etichetă din
+   mijloc ar părea la 900px de traseu dacă am măsura doar până la ele */
+function distToPath(segs, cx, cy) {
+  let best = Infinity;
+  for (const s of segs) {
+    const dx = s.bx - s.ax, dy = s.by - s.ay;
+    const len2 = dx * dx + dy * dy;
+    let t = len2 ? ((cx - s.ax) * dx + (cy - s.ay) * dy) / len2 : 0;
+    t = Math.max(0, Math.min(1, t));
+    const d = Math.hypot(s.ax + t * dx - cx, s.ay + t * dy - cy);
+    if (d < best) best = d;
   }
   return best;
 }
@@ -254,17 +271,13 @@ for (const { e, k } of vectors) {
   const ends = endpoints(e.file, e.x, e.y);
   const from = ends ? nearest(ends.dot, 240) : null;
   const to = ends ? nearest(ends.head, 240) : null;
-  const lab = labelFor(e);
-  if (lab) lab.taken = true;
-
   let a = from, b = to;
 
   /* Săgețile foarte lungi pot avea ambele capete lângă aceeași cutie.
-     Le reparăm din lista de relații: eticheta plus capătul sigur. */
+     Le reparăm din lista de relații, pornind de la capătul sigur. */
   if (!a || !b || a === b) {
     const known = a || b;
-    const want = lab ? norm(lab.e.text) : null;
-    let cands = EDGES.filter(x => !want || norm(x.label) === want);
+    let cands = EDGES.slice();
     if (known) cands = cands.filter(x => x.from === known || x.to === known);
 
     const boxOfId = id => entities.find(en => en.id === id);
@@ -285,7 +298,7 @@ for (const { e, k } of vectors) {
   }
 
   if (!a || !b || a === b) {
-    unmatched.push({ el: k, name: e.name, from: a, to: b, label: lab ? lab.e.text : null });
+    unmatched.push({ el: k, name: e.name, from: a, to: b, label: null });
     continue;
   }
 
@@ -297,11 +310,45 @@ for (const { e, k } of vectors) {
 
   relations.push({
     el: k, from: a, to: b,
-    labelEl: lab ? lab.k : null,
-    label: lab ? lab.e.text.replace(/\s+/g, " ").trim() : "",
+    pts: pathSegments(e.file, e.x, e.y),
+    labelEl: null, label: "", labelEls: [],
     viewBox, d
   });
 }
+
+/* ---------- 2b. Etichetele, atribuite global ---------- */
+/* Atribuirea lacomă „cea mai apropiată etichetă” greșește când două
+   săgeți trec una lângă alta: prima își ia eticheta vecinei. Calculăm
+   toate perechile, cu bonus când textul se potrivește cu o relație
+   cunoscută între exact aceleași capete, și le luăm în ordinea costului. */
+
+const pairs = [];
+for (const rel of relations) {
+  for (const cand of labelPool) {
+    const cx = cand.e.x + cand.e.w / 2, cy = cand.e.y + cand.e.h / 2;
+    const d = distToPath(rel.pts, cx, cy);
+    if (d > 150) continue;
+    const want = norm(cand.e.text);
+    const exact = EDGES.some(x =>
+      norm(x.label) === want &&
+      ((x.from === rel.from && x.to === rel.to) || (x.from === rel.to && x.to === rel.from)));
+    pairs.push({ rel, cand, cost: d - (exact ? 90 : 0) });
+  }
+}
+pairs.sort((p, q) => p.cost - q.cost);
+
+for (const p of pairs) {
+  if (p.cand.taken) continue;
+  if (p.rel.labelEls.length >= 2) continue;   // o săgeată poate purta două
+  p.cand.taken = true;
+  p.rel.labelEls.push(p.cand.k);
+  if (!p.rel.label) {
+    p.rel.label = p.cand.e.text.replace(/\s+/g, " ").trim();
+    p.rel.labelEl = p.cand.k;
+  }
+}
+
+relations.forEach(r => { delete r.pts; });
 
 /* ---------- 3. Textele din documentar, potrivite pe relații ---------- */
 
