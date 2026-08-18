@@ -42,7 +42,7 @@ function mountTimeline(onTag) {
       <p class="tl-body">${item.body}</p>
       <div class="tl-tags">
         ${item.nodes.map(id => NODE_BY_ID[id]
-          ? `<button class="tl-tag" data-node="${id}">${NODE_BY_ID[id].label.join(" ")}</button>`
+          ? `<button type="button" class="tl-tag" data-node="${id}">${NODE_BY_ID[id].label.join(" ")}</button>`
           : "").join("")}
       </div>
     </article>`).join("");
@@ -84,11 +84,11 @@ function mountFilters(map) {
 
   wrap.innerHTML =
     kinds.map(k => `
-      <button class="chip chip--${k}" data-kind="${k}" aria-pressed="false">
+      <button type="button" class="chip chip--${k}" data-kind="${k}" aria-pressed="false">
         <span class="chip__dot" aria-hidden="true"></span>${KIND_META[k].label}
       </button>`).join("") +
     (hasAffil ? `
-      <button class="chip chip--affil" data-kind="${AFFIL_TAG.key}" aria-pressed="false">
+      <button type="button" class="chip chip--affil" data-kind="${AFFIL_TAG.key}" aria-pressed="false">
         <span class="chip__dot" aria-hidden="true"></span>${AFFIL_TAG.label}
       </button>` : "");
 
@@ -194,7 +194,7 @@ function renderDrawer(sel) {
       <h4 class="drawer__h">Legături · ${rels.length}</h4>
       <div class="links">
         ${rels.map(r => `
-          <button class="link-row" data-goto="edge:${r.index}">
+          <button type="button" class="link-row" data-goto="edge:${r.index}">
             <span class="link-row__dir">${r.dir}</span>
             <span>
               <span class="link-row__rel">${r.rel}</span>
@@ -220,14 +220,14 @@ function renderDrawer(sel) {
       ${lead}
       <h4 class="drawer__h">Capetele relației</h4>
       <div class="links">
-        <button class="link-row" data-goto="node:${a.id}">
+        <button type="button" class="link-row" data-goto="node:${a.id}">
           <span class="link-row__dir">DE&nbsp;LA</span>
           <span>
             <span class="link-row__to">${a.label.join(" ")}</span>
             <span class="link-row__rel">${a.role}</span>
           </span>
         </button>
-        <button class="link-row" data-goto="node:${b.id}">
+        <button type="button" class="link-row" data-goto="node:${b.id}">
           <span class="link-row__dir">CĂTRE</span>
           <span>
             <span class="link-row__to">${b.label.join(" ")}</span>

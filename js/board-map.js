@@ -21,13 +21,19 @@ class BoardMap {
        plansei — destul cât să dea adâncime, prea puțin cât să distragă. */
     this.grid = document.createElement("div");
     this.grid.className = "map__grid";
+    this.gridTile = document.createElement("i");
+    this.grid.append(this.gridTile);
     this.stage.prepend(this.grid);
+
+    this.vignette = document.createElement("div");
+    this.vignette.className = "map__vignette";
 
     this.board = document.createElement("div");
     this.board.className = "board";
     this.board.style.width = BOARD.width + "px";
     this.board.style.height = BOARD.height + "px";
     this.stage.prepend(this.board);
+    this.stage.insertBefore(this.vignette, this.board);
 
     this.relOf = new Map();     // index element -> relații care îl folosesc
     this.entOf = new Map();     // index element -> entitate
@@ -256,16 +262,28 @@ class BoardMap {
     const { x, y, k } = this.view;
     this.board.style.transform = `translate(${x}px, ${y}px) scale(${k})`;
 
-    if (this.grid) {
+    if (this.gridTile) {
       const P = 0.2;                                   // o cincime din viteză
       const base = this.baseK || k;
       const gk = 1 + (k / base - 1) * P;               // zoom amortizat
       const cell = 46 * gk;
-      this.grid.style.backgroundSize =
-        `${cell}px ${cell}px, ${cell}px ${cell}px, ${cell * 5}px ${cell * 5}px, ${cell * 5}px ${cell * 5}px`;
-      const gx = x * P + (this.drift || 0), gy = y * P;
-      this.grid.style.backgroundPosition =
-        `${gx}px ${gy}px, ${gx}px ${gy}px, ${gx}px ${gy}px, ${gx}px ${gy}px`;
+
+      /* Mărimea celulei redesenează stratul, deci o atingem doar când
+         chiar s-a schimbat scara — nu la fiecare cadru de derivă. */
+      if (Math.abs(cell - (this.gridCell || 0)) > 0.25) {
+        this.gridCell = cell;
+        this.gridTile.style.backgroundSize =
+          `${cell}px ${cell}px, ${cell}px ${cell}px, ` +
+          `${cell * 5}px ${cell * 5}px, ${cell * 5}px ${cell * 5}px`;
+      }
+
+      /* Deplasarea merge prin transform. Modulo pasul mare al grilei:
+         tiparul se repetă, deci translația rămâne mică și fără cusătură. */
+      const span = this.gridCell * 5;
+      const wrap = (v) => ((v % span) + span) % span;
+      const gx = wrap(x * P + this.drift);
+      const gy = wrap(y * P);
+      this.gridTile.style.transform = `translate3d(${gx}px, ${gy}px, 0)`;
     }
   }
 

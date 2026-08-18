@@ -106,7 +106,33 @@ python -m http.server 8777
 Apoi deschide `http://localhost:8777`. Pagina merge și deschisă direct de pe disc
 (scripturi clasice, fără module), dar prin server e cel mai aproape de producție.
 
-## Notă
+## Notă la reimport
 
-Informațiile de pe site reproduc afirmațiile din documentar și din materialele de
-presă citate în el. Toate persoanele menționate beneficiază de prezumția de nevinovăție.
+`assets/board/peace-sign-1.png` este filigranul din fundal. Pluginul îl exportă
+la 2×, adică 2830 × 3703 px — 40 MB decodați în memorie pentru un element afișat
+la 2% opacitate. Pe telefon, atâta memorie omoară fila.
+
+După fiecare reimport din Figma, micșorează-l la un sfert (~708 × 926 px):
+
+```powershell
+Add-Type -AssemblyName System.Drawing
+$f = "assetsoard\peace-sign-1.png"
+$im = [System.Drawing.Image]::FromFile((Resolve-Path $f))
+$b = New-Object System.Drawing.Bitmap([int]($im.Width/4), [int]($im.Height/4))
+$g = [System.Drawing.Graphics]::FromImage($b)
+$g.InterpolationMode = "HighQualityBicubic"
+$g.DrawImage($im, 0, 0, $b.Width, $b.Height)
+$im.Dispose(); $g.Dispose()
+$b.Save("$PWD\peace-tmp.png", "Png"); $b.Dispose()
+Move-Item "$PWD\peace-tmp.png" $f -Force
+```
+
+Restul imaginilor pot rămâne la 2×: sunt afișate la jumătate, deci arată clar
+pe ecrane dense.
+
+## Prezumția de nevinovăție
+
+Persoanele menționate pe site beneficiază de prezumția de nevinovăție. Acolo unde
+există dosare penale, ele sunt în lucru sau au fost clasate. Textele afirmă direct
+ce se știe și atribuie instituțiilor — Parchetul European, parchete, ministere —
+constatările care le aparțin.
