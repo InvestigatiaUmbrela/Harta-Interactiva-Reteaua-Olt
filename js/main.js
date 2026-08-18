@@ -4,7 +4,7 @@
    Înlocuiește cu ID-ul clipului de pe YouTube (partea de după
    „watch?v=” sau după „youtu.be/”). Exemplu: "dQw4w9WgXcQ"
    ============================================================ */
-const VIDEO_ID = "";
+const VIDEO_ID = "pEphuJU3OQo";
 
 const gsap = window.gsap;
 const ScrollTrigger = window.ScrollTrigger;
