@@ -61,6 +61,8 @@ board.elements.forEach((el, i) => {
     name: el.name,
     type: el.type,
     x: el.x, y: el.y, w: el.w, h: el.h,
+    ...(el.lx !== null && el.lx !== undefined
+      ? { lx: el.lx, ly: el.ly, lw: el.lw, lh: el.lh } : {}),
     rotation: el.rotation || 0,
     opacity: el.opacity === undefined ? 1 : el.opacity,
     file: `assets/board/${file}`,

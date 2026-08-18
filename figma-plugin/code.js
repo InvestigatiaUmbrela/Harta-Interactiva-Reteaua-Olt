@@ -19,7 +19,16 @@ const VECTORISH = ["VECTOR", "LINE", "ELLIPSE", "POLYGON", "STAR",
 const DESCEND_AREA = 0.28;   // grupurile peste 28% din board se despachetează
 const MAX_DEPTH = 6;
 
+/* Conturul a ce se desenează efectiv, nu cutia de aranjare în pagină.
+   Diferența contează în două locuri:
+   - o linie perfect dreaptă are cutia de înălțime 0, dar se desenează groasă;
+   - la text, cutia include spațiul liniei, mult mai înalt decât literele.
+   Punem elementele după render bounds, ca exportul să se potrivească exact. */
 function boxOf(node) {
+  return node.absoluteRenderBounds || node.absoluteBoundingBox || null;
+}
+
+function layoutBoxOf(node) {
   return node.absoluteBoundingBox || null;
 }
 
@@ -104,8 +113,10 @@ async function run(scale) {
 
     let data = null;
     try {
+      /* Textul iese ca vectori, nu ca <text>: altfel SVG-ul depinde de
+         fontul din Figma, iar în browser s-ar înlocui cu altceva. */
       const settings = format === "svg"
-        ? { format: "SVG", svgOutlineText: false }
+        ? { format: "SVG", svgOutlineText: true }
         : { format: "PNG", constraint: { type: "SCALE", value: scale } };
       const bytes = await node.exportAsync(settings);
       data = format === "svg"
@@ -115,6 +126,8 @@ async function run(scale) {
       data = null;
     }
 
+    const lay = layoutBoxOf(node);
+
     const item = {
       id: node.id,
       name: node.name,
@@ -123,6 +136,12 @@ async function run(scale) {
       y: Math.round((box.y - rootBox.y) * 100) / 100,
       w: Math.round(box.width * 100) / 100,
       h: Math.round(box.height * 100) / 100,
+      /* cutia de aranjare, păstrată pentru zonele de click:
+         la text e mai generoasă decât literele, deci mai ușor de atins */
+      lx: lay ? Math.round((lay.x - rootBox.x) * 100) / 100 : null,
+      ly: lay ? Math.round((lay.y - rootBox.y) * 100) / 100 : null,
+      lw: lay ? Math.round(lay.width * 100) / 100 : null,
+      lh: lay ? Math.round(lay.height * 100) / 100 : null,
       rotation: Math.round((node.rotation || 0) * 100) / 100,
       opacity: node.opacity === undefined ? 1 : Math.round(node.opacity * 100) / 100,
       format,

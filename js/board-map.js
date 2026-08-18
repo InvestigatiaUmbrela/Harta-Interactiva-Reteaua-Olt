@@ -80,7 +80,6 @@ class BoardMap {
       const svg = document.createElementNS(NSVG, "svg");
       svg.setAttribute("class", "wire");
       svg.setAttribute("viewBox", r.viewBox);
-      svg.setAttribute("preserveAspectRatio", "none");
       svg.dataset.rel = String(i);
       svg.style.cssText = `left:${e.x}px;top:${e.y}px;width:${e.w}px;height:${e.h}px;`;
 
