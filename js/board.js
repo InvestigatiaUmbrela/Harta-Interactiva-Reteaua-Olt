@@ -697,22 +697,6 @@ const BOARD = {
    "file": "assets/board/psd-white-5.png"
   },
   {
-   "id": "56:154",
-   "name": "Peace sign 1",
-   "type": "RECTANGLE",
-   "x": 2852,
-   "y": 803,
-   "w": 1414.65,
-   "h": 1851.49,
-   "lx": 2852,
-   "ly": 803,
-   "lw": 1414.65,
-   "lh": 1851.49,
-   "rotation": 13.91,
-   "opacity": 0.02,
-   "file": "assets/board/peace-sign-1.png"
-  },
-  {
    "id": "56:36",
    "name": "Primar SLATINA",
    "type": "TEXT",

@@ -39,8 +39,13 @@ const used = new Map();
 const elements = [];
 const stats = { png: 0, svg: 0, empty: 0, bytes: 0 };
 
+/* filigranul din fundal nu se mai importa: era un PNG urias afisat la
+   2% opacitate, doar cost de memorie */
+const DROP = [/peace\s*sign/i];
+
 board.elements.forEach((el, i) => {
   if (!el.data) { stats.empty++; return; }
+  if (DROP.some(re => re.test(el.name || ""))) return;
 
   let base = slug(el.name);
   const n = (used.get(base) || 0) + 1;

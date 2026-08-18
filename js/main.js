@@ -110,7 +110,7 @@ function mountFilters(map) {
    ============================================================ */
 const drawer = {
   root: null, card: null, kind: null, title: null, role: null, body: null,
-  shot: null, img: null, lastFocus: null
+  shot: null, img: null, lastFocus: null, lockedAt: null
 };
 
 function initDrawer(map) {
@@ -149,9 +149,37 @@ function initDrawer(map) {
   });
 }
 
+/* Cât pop-up-ul e deschis, pagina din spate nu se mai mișcă. Altfel derulai
+   fundalul fără să vrei, iar la închidere pagina sărea în altă parte și
+   harta se remăsura degeaba. Ținem minte poziția și o punem înapoi. */
+function lockPage() {
+  if (drawer.lockedAt !== null && drawer.lockedAt !== undefined) return;
+  drawer.lockedAt = window.scrollY;
+  const b = document.body;
+  b.style.position = "fixed";
+  b.style.top = `-${drawer.lockedAt}px`;
+  b.style.left = "0";
+  b.style.right = "0";
+  b.style.width = "100%";
+}
+
+function unlockPage() {
+  if (drawer.lockedAt === null || drawer.lockedAt === undefined) return;
+  const y = drawer.lockedAt;
+  drawer.lockedAt = null;
+  const b = document.body;
+  b.style.position = "";
+  b.style.top = "";
+  b.style.left = "";
+  b.style.right = "";
+  b.style.width = "";
+  window.scrollTo(0, y);
+}
+
 function closeDrawer() {
   if (!drawer.root || drawer.root.hidden) return;
   drawer.root.hidden = true;
+  unlockPage();
   if (drawer.lastFocus && document.contains(drawer.lastFocus)) drawer.lastFocus.focus();
   drawer.lastFocus = null;
 }
@@ -252,6 +280,7 @@ function renderDrawer(sel) {
 
   if (drawer.root.hidden) drawer.lastFocus = document.activeElement;
   drawer.root.hidden = false;
+  lockPage();
   drawer.body.scrollTop = 0;
   $("#modal-close").focus({ preventScroll: true });
 
@@ -321,6 +350,46 @@ function mountHeroWeb() {
 const prefersReduced = () =>
   window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
+/* Impulsuri care circulă continuu prin rețea: fiecare traseu primește un
+   segment scurt care îl parcurge la nesfârșit, cu porniri decalate, ca să
+   nu bată toate în același ritm.
+
+   Pornirea nu atârnă de animația de intrare. Dacă ar fi legată de finalul
+   ei și aceasta s-ar întrerupe — filă în fundal, tab reactivat târziu —
+   pânza ar rămâne moartă pentru totdeauna. */
+let pulseLoop = null;
+
+function startPulses() {
+  if (pulseLoop || !gsap || prefersReduced()) return;
+
+  const pulses = $$("#hero-web .web-pulse");
+  if (!pulses.length) return;
+
+  pulseLoop = gsap.timeline({ repeat: -1 });
+
+  pulses.forEach((p, i) => {
+    const len = p.getTotalLength();
+    if (!len) return;
+    const dash = Math.min(90, Math.max(28, len * 0.12));
+    gsap.set(p, { strokeDasharray: `${dash} ${len}`, strokeDashoffset: dash });
+    pulseLoop.to(p, {
+      strokeDashoffset: -len,
+      duration: 3.2 + len / 900,
+      ease: "none",
+      repeat: -1,
+      repeatDelay: 1.4
+    }, i * 0.09);
+  });
+
+  // nu ardem baterie cât pânza nu se vede
+  if (ScrollTrigger) {
+    ScrollTrigger.create({
+      trigger: ".hero", start: "top bottom", end: "bottom top",
+      onToggle: self => (self.isActive ? pulseLoop.play() : pulseLoop.pause())
+    });
+  }
+}
+
 function animate(map) {
   if (!gsap) return;
 
@@ -364,38 +433,9 @@ function animate(map) {
       }, 0.4)
       .from(".hero__lede", { opacity: 0, y: 24, duration: 0.8 }, "-=0.5")
       .from(".hero__cta > *", { opacity: 0, y: 18, duration: 0.6, stagger: 0.08 }, "-=0.45")
-      .from(".hero__scroll", { opacity: 0, duration: 0.6 }, "-=0.3")
-      .add(() => startPulses(), "-=0.8");
+      .from(".hero__scroll", { opacity: 0, duration: 0.6 }, "-=0.3");
 
-    /* Impulsuri care circulă continuu prin rețea. Fiecare traseu primește
-       un segment scurt care îl parcurge la nesfârșit, cu porniri decalate,
-       ca să nu bată toate în același ritm. */
-    let pulseLoop = null;
-    function startPulses() {
-      if (pulseLoop) return;
-      const pulses = $$("#hero-web .web-pulse");
-      if (!pulses.length) return;
-
-      pulseLoop = gsap.timeline({ repeat: -1 });
-      pulses.forEach((p, i) => {
-        const len = p.getTotalLength();
-        const dash = Math.min(90, Math.max(28, len * 0.12));
-        gsap.set(p, { strokeDasharray: `${dash} ${len}`, strokeDashoffset: dash });
-        pulseLoop.to(p, {
-          strokeDashoffset: -len,
-          duration: 3.2 + (len / 900),
-          ease: "none",
-          repeat: -1,
-          repeatDelay: 1.4
-        }, i * 0.09);
-      });
-
-      /* nu ardem baterie când pânza nu se vede */
-      ScrollTrigger.create({
-        trigger: ".hero", start: "top bottom", end: "bottom top",
-        onToggle: self => self.isActive ? pulseLoop.play() : pulseLoop.pause()
-      });
-    }
+    startPulses();
 
     /* --- linia roșie de sub fiecare titlu de secțiune --- */
     $$(".section__rule").forEach(rule => {

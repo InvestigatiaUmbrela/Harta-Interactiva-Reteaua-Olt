@@ -38,7 +38,13 @@
 
 *, *::before, *::after { box-sizing: border-box; }
 
-html { scroll-behavior: smooth; }
+html {
+  scroll-behavior: smooth;
+  /* bara de derulare rămâne mereu rezervată: când blocăm pagina sub
+     pop-up, dispariția ei ar îngusta fereastra și harta s-ar reîncadra */
+  scrollbar-gutter: stable;
+  overflow-y: scroll;
+}
 @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
 
 body {
@@ -503,6 +509,7 @@ button { font: inherit; color: inherit; cursor: pointer; }
 /* --- pop-up detalii --- */
 .modal {
   position: fixed; inset: 0; z-index: 950;
+  overscroll-behavior: contain;
   display: grid; place-items: center;
   padding: clamp(0.75rem, 3vw, 2.5rem);
 }
@@ -569,7 +576,12 @@ button { font: inherit; color: inherit; cursor: pointer; }
 }
 .modal__role { margin: 0.6rem 0 0; color: var(--ash); font-size: 0.92rem; }
 
-.modal__body { padding: 1.5rem 1.6rem 1.8rem; overflow-y: auto; }
+.modal__body {
+  padding: 1.5rem 1.6rem 1.8rem;
+  overflow-y: auto;
+  overscroll-behavior: contain;   /* derularea nu trece la pagina din spate */
+  -webkit-overflow-scrolling: touch;
+}
 .drawer__lead { margin: 0 0 1.4rem; font-size: 1.02rem; line-height: 1.6; }
 
 .drawer__h {

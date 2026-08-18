@@ -488,10 +488,26 @@ class BoardMap {
       this.zoomAt(1.6, p.x, p.y);
     });
 
+    /* Pe telefon, bara de adrese care apare și dispare la scroll trimite
+       un `resize` la fiecare mișcare. Dacă reîncadrăm de fiecare dată,
+       zoom-ul utilizatorului se pierde din senin. Reîncadrăm doar când
+       chiar s-a schimbat lățimea — rotire de ecran, fereastră trasă. */
     let t = null;
+    let lastW = this.stage.getBoundingClientRect().width;
+
     window.addEventListener("resize", () => {
       clearTimeout(t);
-      t = setTimeout(() => { this.fit(); }, 180);
+      t = setTimeout(() => {
+        const w = this.stage.getBoundingClientRect().width;
+        if (Math.abs(w - lastW) > 2) {
+          lastW = w;
+          this.fit();
+        } else {
+          this.clamp(this.target);
+          this.clamp(this.view);
+          this.apply();
+        }
+      }, 180);
     });
   }
 }
