@@ -73,7 +73,10 @@ function mountFigures() {
 function mountFilters(map) {
   const wrap = $("#map-filters");
   if (!wrap) return;
-  const kinds = [...new Set(NODES.map(n => n.kind))];
+  /* după contopiri, un om poate fi și firma lui: filtrele se uită și la
+     `also`, altfel „Companie privată” ar rămâne aproape goală */
+  const kinds = Object.keys(KIND_META).filter(k =>
+    NODES.some(n => n.kind === k || (n.also || []).includes(k)));
   wrap.innerHTML = kinds.map(k => `
     <button class="chip chip--${k}" data-kind="${k}" aria-pressed="false">
       <span class="chip__dot" aria-hidden="true"></span>${KIND_META[k].label}
@@ -158,11 +161,25 @@ function renderDrawer(sel) {
   if (sel.type === "node") {
     const n = NODE_BY_ID[sel.id];
     const rels = relationsOf(n.id);
-    drawer.kind.textContent = `${KIND_META[n.kind].label} · sursă: ${n.src}`;
+    const kinds = [n.kind, ...(n.also || [])]
+      .map(k => KIND_META[k] && KIND_META[k].label)
+      .filter(Boolean);
+    drawer.kind.textContent = [kinds.join(" · "), `sursă: ${n.src}`]
+      .filter(Boolean).join(" · ");
     drawer.title.textContent = n.label.join(" ");
     drawer.role.textContent = n.role;
+
+    /* apartenențele, așa cum apar pe planșă: sigla PSD lângă om,
+       stema SRI la cei veniți pe filiera serviciilor */
+    const affil = (n.affil || []).length
+      ? `<h4 class="drawer__h">Apartenențe</h4>
+         <div class="affils">${n.affil
+           .map(a => `<span class="affil affil--${a.toLowerCase()}">${a}</span>`).join("")}</div>`
+      : "";
+
     drawer.body.innerHTML = `
       <p class="drawer__lead">${n.lead}</p>
+      ${affil}
       <h4 class="drawer__h">Din documentar</h4>
       <ul class="facts">${n.facts.map(f => `<li>${f}</li>`).join("")}</ul>
       <h4 class="drawer__h">Legături · ${rels.length}</h4>

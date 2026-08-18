@@ -537,6 +537,16 @@ button { font: inherit; color: inherit; cursor: pointer; }
   width: 5px; height: 5px; background: var(--blood-hot);
 }
 
+/* apartenențe: aceleași sigle care stau lângă om pe planșă */
+.affils { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+.affil {
+  font-family: var(--font-plate); font-size: 0.78rem;
+  letter-spacing: 0.04em; text-transform: uppercase;
+  padding: 0.4rem 0.7rem; border: 1.5px solid currentColor;
+}
+.affil--psd { color: var(--bone); background: rgba(255, 255, 255, 0.07); }
+.affil--sri { color: var(--blood-hot); background: rgba(153, 0, 0, 0.16); }
+
 .links { display: flex; flex-direction: column; gap: 0.3rem; }
 .link-row {
   display: grid; grid-template-columns: auto 1fr; gap: 0.7rem;

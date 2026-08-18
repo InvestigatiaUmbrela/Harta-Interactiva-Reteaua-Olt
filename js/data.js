@@ -10,7 +10,9 @@ const DISCLAIMER =
   "de presă citate în el. Toate persoanele menționate beneficiază de prezumția de nevinovăție.";
 
 /* ---------- NODURI ---------- */
-/* kind: person | office | company-state | company-private | service | event */
+/* kind: person | office | company-state | company-private
+   also  = ce mai este entitatea, pentru filtre
+   affil = apartenențe pe planșă: PSD, SRI */
 
 const NODES = [
   {
@@ -25,24 +27,13 @@ const NODES = [
       "În 2023 rețeaua se extinde la nivel național prin afacerea cu stuful din Delta Dunării.",
       "Documentarul îl leagă de Sorin Grindeanu, actualul lider PSD, drept omul care a mișcat sforile pentru Stănescu și Barbu."
     ],
-    src: "harta"
-  },
-  {
-    id: "cjolt", kind: "office", x: 470, y: 250,
-    label: ["Președinte", "CJ OLT"],
-    role: "Funcția-cheie a județului.",
-    lead: "Consiliul Județean Olt este ordonatorul de credite care decide traseul banilor publici din județ: drumuri, spital, companii proprii, achiziții europene.",
-    facts: [
-      "Ocupată de Marius Oprescu, care ajunge aici la câțiva ani după ce fusese inculpat într-un dosar de ucidere din culpă.",
-      "Controlează Spitalul Județean de Urgență Slatina și societatea Olt Drum.",
-      "Prin CJ Olt s-a făcut cea mai scumpă achiziție de microbuze școlare electrice din România: aproximativ 262.000 € bucata."
-    ],
+    affil: ["PSD"],
     src: "harta"
   },
   {
     id: "oprescu", kind: "person", x: 500, y: 425,
     label: ["Marius", "OPRESCU"], eyebrow: "PSD",
-    role: "Locotenentul devenit baron local.",
+    role: "Președintele CJ Olt. Baronul local.",
     lead: "Trece în câțiva ani de la statutul de inculpat într-un dosar de ucidere din culpă la președinte al Consiliului Județean Olt. Documentarul îl descrie drept nodul prin care trec contractele publice ale județului.",
     facts: [
       "3 octombrie 2013, Piatra Olt: un Toyota Hilux achiziționat la ISU, folosit nelegal ca mașină personală, lovește o căruță nesemnalizată cu patru persoane. Un bărbat de 34 de ani moare după câteva săptămâni.",
@@ -50,8 +41,13 @@ const NODES = [
       "Rechizitoriul Parchetului de pe lângă Curtea de Apel Craiova arată că proba din seara accidentului are grupa A1, în timp ce Oprescu are grupa 0.",
       "În 2017 Judecătoria Slatina îl achită.",
       "Este nașul lui Emil Moț și cumnatul lui Nicușor Rada, primarul din Piatra-Olt.",
-      "În 2009 apare în sala Consiliului Județean Olt, în dreapta interlopului Bercea Mondial, la ceremonia în care acesta e numit „președintele romilor”."
+      "În 2009 apare în sala Consiliului Județean Olt, în dreapta interlopului Bercea Mondial, la ceremonia în care acesta e numit „președintele romilor”.",
+      "Ca președinte al CJ Olt, controlează Spitalul Județean de Urgență Slatina și societatea Olt Drum.",
+      "Este ordonator de credite: decide traseul banilor publici din județ — drumuri, spital, companii proprii, achiziții europene.",
+      "Prin CJ Olt s-a făcut cea mai scumpă achiziție de microbuze școlare electrice din România: aproximativ 262.000 € bucata."
     ],
+    also: ["office"],
+    affil: ["PSD"],
     src: "harta"
   },
   {
@@ -67,28 +63,20 @@ const NODES = [
     src: "harta"
   },
   {
-    id: "primarslatina", kind: "office", x: 310, y: 336,
-    label: ["Primar", "SLATINA"],
-    role: "Primăria municipiului reședință de județ.",
-    lead: "Împreună cu Compania de Apă Olt, Primăria Slatina devine, în relatarea documentarului, poarta prin care se aranjează licitații sau se atribuie direct proiecte către contractorii de casă.",
-    facts: [
-      "Ocupată de Emil Moț, finul lui Marius Oprescu și fiul Marianei Moț.",
-      "În vara lui 2024 candidatul rețelei pierde municipiul Slatina — primul șoc real al structurii.",
-      "Urmează demisii în cascadă, de la primărie până la Compania de Apă Olt."
-    ],
-    src: "harta"
-  },
-  {
     id: "emilmot", kind: "person", x: 300, y: 464,
     label: ["Emil", "MOȚ"], eyebrow: "PSD",
     role: "Primarul Slatinei. Finul lui Oprescu.",
     lead: "Fiul Marianei Moț și finul lui Marius Oprescu. Alianța dintre Primăria Slatina și Consiliul Județean închide cercul local de putere.",
     facts: [
-      "Pierde al treilea mandat la Slatina în vara lui 2024.",
+      "Pierde al treilea mandat la Slatina în vara lui 2024 — primul șoc real al structurii.",
       "Apare în dosarul DIICOT în care este implicată și Marina Pandarov.",
       "Au apărut informații că ar fi fost filmat consumând droguri alături de Pandarov.",
-      "Socrul său, Vasile Covaciu, fost angajat SRI, ajunge director adjunct la Compania de Apă Olt."
+      "Socrul său, Vasile Covaciu, fost angajat SRI, ajunge director adjunct la Compania de Apă Olt.",
+      "Primăria pe care o conduce devine, împreună cu Compania de Apă Olt, poarta prin care se aranjează licitații sau se atribuie direct proiecte către contractorii de casă.",
+      "După înfrângere urmează demisii în cascadă, de la primărie până la Compania de Apă Olt."
     ],
+    also: ["office"],
+    affil: ["PSD"],
     src: "harta"
   },
 
@@ -103,6 +91,8 @@ const NODES = [
       "Rezultatul, spune documentarul: dezastru ecologic pe Lunca Oltului.",
       "În schimb, Consiliul Județean alocă fonduri suplimentare primăriei pe care o conduce."
     ],
+    also: ["office"],
+    affil: ["PSD"],
     src: "harta"
   },
   {
@@ -118,27 +108,19 @@ const NODES = [
     src: "harta"
   },
   {
-    id: "anif", kind: "office", x: 1150, y: 130,
-    label: ["ANIF", "Min. Agriculturii"],
-    role: "Robinetul național de bani pentru irigații.",
-    lead: "Agenția Națională de Îmbunătățiri Funciare, condusă de un om de bază al lui Paul Stănescu, devine sursa celor mai mari plăți din poveste.",
-    facts: [
-      "A virat peste 500 de milioane de lei către Wagramer pentru modernizarea canalelor de irigații din Olt.",
-      "Agricultorii locali nu au primit niciun strop de apă pe câmpuri — semn că lucrările fie nu au fost executate, fie au fost făcute de mântuială.",
-      "Florin „Busi” Barbu, conducătorul ei de atunci, promovează ulterior ca ministru al Agriculturii."
-    ],
-    src: "harta"
-  },
-  {
     id: "busi", kind: "person", x: 1220, y: 250,
     label: ["Florin ‘Busi’", "BARBU"], eyebrow: "PSD",
-    role: "Protejatul care ajunge ministru.",
+    role: "Ministrul Agriculturii. Fostul șef al ANIF.",
     lead: "Deputat PSD de Olt, apropiat de Paul Stănescu, instalat la ANIF și promovat ministru al Agriculturii. În jurul lui, spune documentarul, amendamentele par să apară din neant.",
     facts: [
-      "Sub conducerea lui, ANIF virează peste 500 de milioane de lei către Wagramer.",
+      "Sub conducerea lui, ANIF a virat peste 500 de milioane de lei către Wagramer pentru modernizarea canalelor de irigații din Olt.",
+      "Agricultorii locali nu au primit niciun strop de apă pe câmpuri — semn că lucrările fie nu au fost executate, fie au fost făcute de mântuială.",
       "Invocă paludicultura și susține că schimbările legislative din Deltă respectă regulile Uniunii Europene.",
-      "Stufărișurile din Delta Dunării au fost recategorizate ca pășuni printr-o lege modificată pe repede înainte."
+      "Stufărișurile din Delta Dunării au fost recategorizate ca pășuni printr-o lege modificată pe repede înainte.",
+      "De la ANIF promovează ministru al Agriculturii, cu rețeaua din Olt în spate."
     ],
+    also: ["office"],
+    affil: ["PSD"],
     src: "harta"
   },
   {
@@ -165,7 +147,7 @@ const NODES = [
     src: "harta"
   },
   {
-    id: "sri", kind: "service", x: 118, y: 142,
+    id: "sri", kind: "office", x: 118, y: 142,
     label: ["S.R.I."],
     role: "Filiera din spatele numirilor.",
     lead: "Doi dintre directorii Companiei de Apă Olt vin pe filiera serviciilor. Documentarul ridică întrebarea protecției informative de care s-ar fi bucurat rețeaua.",
@@ -210,6 +192,7 @@ const NODES = [
       "Interceptările din dosar surprind negocierea cantităților.",
       "Este fostul director al companiei de apă din Slatina din relatările de presă."
     ],
+    affil: ["PSD","SRI"],
     src: "harta"
   },
   {
@@ -222,6 +205,7 @@ const NODES = [
       "Numirea vine pe filiera serviciilor.",
       "Pe hartă apare susținând Old&New Construct."
     ],
+    affil: ["SRI"],
     src: "harta"
   },
   {
@@ -249,52 +233,33 @@ const NODES = [
     src: "harta"
   },
   {
-    id: "mineralport", kind: "company-private", x: 786, y: 528,
-    label: ["Mineralport"],
-    role: "Nodul de agregate minerale.",
-    lead: "Al doilea nod al lui Oprescu, pe agregate minerale, administrat de Claudiu Postolache, alături de familia de firme Unimineral.",
-    facts: [
-      "Exploatează balastiere deschise cu autorizațiile emise de primarul din Piatra-Olt.",
-      "Vinde asfalt și balast către Olt Drum, compania Consiliului Județean.",
-      "Merge în tandem la licitații cu Olt Drum."
-    ],
-    src: "harta"
-  },
-  {
-    id: "wagramer", kind: "company-private", x: 988, y: 534,
-    label: ["WAGRAMER", "TERMO 2000"],
-    role: "Firma-fanion a rețelei.",
-    lead: "Firma prin care, spune documentarul, se sifonează milioane de lei din contracte publice pe care chiar Oprescu le aranja în calitate de ordonator de credite. Administrată de fațadă de Valeriu Țițirigă.",
-    facts: [
-      "Peste 500 de milioane de lei de la ANIF pentru modernizarea canalelor de irigații din Olt.",
-      "Aproape 15 milioane de lei de la Spitalul Județean Slatina, pentru lucrări evaluate la de trei ori mai puțin.",
-      "Primește lucrări directe dinspre SGA Olt.",
-      "Prin Panadria apar plăți circulare pe servicii fără acoperire."
-    ],
-    src: "harta"
-  },
-  {
     id: "postolache", kind: "person", x: 802, y: 654,
     label: ["Claudiu", "POSTOLACHE"],
     role: "Administratorul Mineralport.",
     lead: "Administrează Mineralport și familia de firme Unimineral — brațul de agregate minerale al rețelei.",
     facts: [
-      "Primește proiecte de la Olt Drum.",
-      "Primește plăți de la Panadria.",
-      "Exploatările se întind și în perimetre neautorizate, dincolo de permisele ANRM."
+      "Administrează Mineralport și familia de firme Unimineral — brațul de agregate minerale al rețelei.",
+      "Exploatează balastiere deschise cu autorizațiile emise de primarul din Piatra-Olt, cumnatul lui Oprescu.",
+      "Exploatările se întind și în perimetre neautorizate, dincolo de permisele ANRM.",
+      "Vinde asfalt și balast la prețuri discutabile către Olt Drum, compania Consiliului Județean.",
+      "Merge în tandem la licitații cu Olt Drum și primește plăți de la Panadria."
     ],
+    also: ["company-private"],
     src: "harta"
   },
   {
     id: "titiriga", kind: "person", x: 992, y: 656,
     label: ["Valeriu", "ȚIȚIRIGĂ"],
-    role: "Administratorul de fațadă.",
+    role: "Administratorul de fațadă al Wagramer Termo 2000.",
     lead: "Fost șofer de taxi și fost șofer la compania Condor Păduraru, ajunge administratorul de fațadă al Wagramer Termo 2000 — firma prin care trec sutele de milioane.",
     facts: [
-      "Administrează formal firma-fanion a rețelei.",
-      "Primește proiecte de la SGA Olt.",
-      "Face plăți circulare cu Panadria."
+      "Fost șofer de taxi și fost șofer la compania Condor Păduraru, ajunge administratorul formal al firmei-fanion a rețelei.",
+      "Prin Wagramer au trecut peste 500 de milioane de lei de la ANIF, pentru irigații din care agricultorii nu au primit apă.",
+      "Aproape 15 milioane de lei de la Spitalul Județean Slatina, pentru lucrări evaluate la de trei ori mai puțin.",
+      "Primește lucrări directe dinspre SGA Olt.",
+      "Prin Panadria apar plăți circulare pe servicii fără acoperire."
     ],
+    also: ["company-private"],
     src: "harta"
   },
   {
@@ -333,49 +298,29 @@ const NODES = [
     src: "harta"
   },
   {
-    id: "oldnew", kind: "company-private", x: 512, y: 770,
-    label: ["OLD&NEW", "CONSTRUCT"],
-    role: "Constructorul de casă al Slatinei.",
-    lead: "Firma de construcții care primește lucrări de la Compania de Apă Olt și de la Primăria Slatina.",
-    facts: [
-      "Controlată de Mircea „Pisicu” Ungureanu.",
-      "Pe hartă apare achitând un comision de „10%” către Marius Oprescu.",
-      "Primește proiecte direct de la președintele Consiliului Județean."
-    ],
-    src: "harta"
-  },
-  {
     id: "pisicu", kind: "person", x: 506, y: 898,
     label: ["Mircea ‘Pisicu’", "UNGUREANU"],
-    role: "Interlopul devenit antreprenor de casă.",
+    role: "Interlopul devenit antreprenor de casă. Old&New Construct.",
     lead: "Și-a aliniat interesele cu ale baronului local, participând la fondul de protocol al rețelei. Istoricul lui penal — dosare de corupție și evaziune — a fost tărăgănat sau clasat.",
     facts: [
-      "Firma lui, Old&New Construct, primește lucrări de la CAO și de la Primăria Slatina.",
+      "Firma lui, Old&New Construct, primește lucrări de la Compania de Apă Olt și de la Primăria Slatina.",
+      "Pe planșă, firma apare achitând un comision de „10%” către primarul Slatinei, de la care primește proiecte direct.",
       "Documentarul spune că rețeaua și-a protejat membrii, permițându-i să pice mereu în picioare.",
       "Rezultatul: drenarea resurselor publice și menținerea circuitului șpăgilor în sistem."
     ],
-    src: "harta"
-  },
-  {
-    id: "condor", kind: "company-private", x: 1078, y: 768,
-    label: ["Condor", "PĂDURARU"],
-    role: "Al doilea contractor major pe apă.",
-    lead: "Unul dintre cei doi jucători cruciali către care Compania de Apă Olt atribuie lucrări.",
-    facts: [
-      "Primește proiecte de la Compania de Apă Olt.",
-      "Valeriu Țițirigă, administratorul Wagramer, a fost șofer la această companie."
-    ],
+    also: ["company-private"],
     src: "harta"
   },
   {
     id: "sorin", kind: "person", x: 1078, y: 898,
     label: ["Sorin", "PĂDURARU"],
-    role: "Omul din spatele Condor.",
+    role: "Omul din spatele Condor Păduraru.",
     lead: "Primește proiecte prin Compania de Apă Olt. Legătura lui cu Valeriu Țițirigă — fostul șofer al tatălui său — arată cât de scurtă e distanța dintre firmele care par independente.",
     facts: [
-      "Condor Păduraru este unul dintre cei doi jucători cruciali pe zona de apă.",
+      "Condor Păduraru este unul dintre cei doi jucători cruciali pe zona de apă, alimentat cu lucrări de Compania de Apă Olt.",
       "Valeriu Țițirigă, administratorul de fațadă al Wagramer, a fost șoferul tatălui său."
     ],
+    also: ["company-private"],
     src: "harta"
   }
 ];
@@ -384,7 +329,7 @@ const NODES = [
 /* route: 'hvh' | 'vhv' | 'hv' | 'vh' | 'line'  — mid = coordonată absolută opțională */
 
 const EDGES = [
-  { from: "stanescu", to: "cjolt", label: "este Mentorul Politic al lui", route: "vhv", mid: 232,
+  { from: "stanescu", to: "oprescu", label: "este Mentorul Politic al lui", route: "vhv", mid: 232,
     detail: "Baronul ridică scara, locotenentul urcă. Documentarul descrie transferul de putere dintre Paul Stănescu și Marius Oprescu ca pe o aterizare pe roți: relații politice, instituții prietene și o rețea care amortizează orice șoc.", src: "harta" },
 
   { from: "stanescu", to: "mariana", label: "o propulsează în funcția de Secretar de Stat în Ministerul Justiției", route: "hvh", mid: 430,
@@ -405,22 +350,22 @@ const EDGES = [
   { from: "carmin", to: "busi", label: "este firma de casă a lui", route: "hvh", mid: 1330, offset: 26,
     detail: "Tiparul se repetă identic la fiecare nivel al rețelei: instituția publică pe de o parte, firma de casă pe cealaltă, iar între ele o singură persoană.", src: "harta" },
 
-  { from: "busi", to: "wagramer", label: "acordă proiecte lui", route: "vhv", mid: 470,
+  { from: "busi", to: "titiriga", label: "acordă proiecte lui", route: "vhv", mid: 470,
     detail: "Doar ANIF, condus atunci de Florin „Busi” Barbu, a virat peste 500 de milioane de lei către Wagramer pentru modernizarea canalelor de irigații din Olt. Agricultorii locali nu au primit niciun strop de apă pe câmpuri.", src: "harta" },
 
-  { from: "cjolt", to: "spital", label: "controlează", route: "line",
+  { from: "oprescu", to: "spital", label: "controlează", route: "line",
     detail: "Spitalul Județean de Urgență Slatina se află în subordinea Consiliului Județean Olt — instituția condusă de Marius Oprescu.", src: "harta" },
 
-  { from: "cjolt", to: "spital", label: "scapă de acuzare de ucidere prin", route: "line", offset: 24,
+  { from: "oprescu", to: "spital", label: "scapă de acuzare de ucidere prin", route: "line", offset: 24,
     detail: "În noaptea accidentului din 2013, recoltarea probei de sânge se face într-un cabinet, fără supravegherea polițiștilor. Rechizitoriul arată că proba din seara accidentului are grupa A1, în timp ce Oprescu are grupa 0. În 2017, Judecătoria Slatina îl achită.", src: "harta" },
 
-  { from: "spital", to: "wagramer", label: "acordă proiecte lui", route: "vhv", mid: 400,
+  { from: "spital", to: "titiriga", label: "acordă proiecte lui", route: "vhv", mid: 400,
     detail: "Spitalul Județean de Urgență Slatina a plătit aproape 15 milioane de lei către Wagramer, în timp ce evaluările estimează valoarea reală a lucrărilor la de trei ori mai puțin.", src: "harta" },
 
-  { from: "mariana", to: "primarslatina", label: "este Mama lui", route: "line",
+  { from: "mariana", to: "emilmot", label: "este Mama lui", route: "line",
     detail: "Legătura de sânge dintre secretarul de stat din Ministerul Justiției și primarul Slatinei. Presa a mai documentat că Mariana Moț este moașă în familia Bercea.", src: "harta" },
 
-  { from: "oprescu", to: "primarslatina", label: "este Nașul lui", route: "hvh", mid: 400,
+  { from: "oprescu", to: "emilmot", label: "este Nașul lui", route: "hvh", mid: 400,
     detail: "Cumetria devine politică: nașul conduce Consiliul Județean, finul conduce Primăria Slatina. Alianța locală închide cercul.", src: "harta" },
 
   { from: "oprescu", to: "rada", label: "este Cumnatul lui", route: "hvh", mid: 700,
@@ -429,13 +374,13 @@ const EDGES = [
   { from: "oprescu", to: "rada", label: "alocă fonduri suplimentare primăriei lui", route: "hvh", mid: 700, offset: 24,
     detail: "La schimb pentru autorizațiile de construire, Oprescu alocă fonduri suplimentare primăriei cumnatului său, pentru a-l ține în funcție.", src: "harta" },
 
-  { from: "rada", to: "mineralport", label: "emite ilegal autorizații pentru", route: "vhv", mid: 495,
+  { from: "rada", to: "postolache", label: "emite ilegal autorizații pentru", route: "vhv", mid: 495,
     detail: "Autorizații de construire pentru balastiere pe terenuri agricole, fără scoatere din circuitul agricol. ANRM dă permise doar pe unele tarlale, dar excavatoarele intră și în perimetre neautorizate. Rezultatul: dezastru ecologic pe Lunca Oltului.", src: "harta" },
 
-  { from: "mineralport", to: "oprescu", label: "este firma de casă a lui", route: "vhv", mid: 372,
+  { from: "postolache", to: "oprescu", label: "este firma de casă a lui", route: "vhv", mid: 372,
     detail: "Al doilea nod al lui Oprescu este pe agregate minerale: Mineralport, administrată de Claudiu Postolache, și familia de firme Unimineral.", src: "harta" },
 
-  { from: "wagramer", to: "oprescu", label: "este firma de casă a lui", route: "vhv", mid: 348,
+  { from: "titiriga", to: "oprescu", label: "este firma de casă a lui", route: "vhv", mid: 348,
     detail: "Documentarul o numește firma fanion a lui Oprescu: administrată de fațadă de Valeriu Țițirigă, folosită pentru a sifona milioane de lei din contracte publice pe care chiar el le aranja în calitate de ordonator de credite.", src: "harta" },
 
   { from: "coldea", to: "pandarof", label: "o sprijină pe", route: "vh",
@@ -456,22 +401,22 @@ const EDGES = [
   { from: "covaciu", to: "cao", label: "este Director la", route: "vhv", mid: 716,
     detail: "Vasile Covaciu, socrul lui Emil Moț și fost angajat SRI, ajunge director adjunct la compania de apă.", src: "harta" },
 
-  { from: "covaciu", to: "oldnew", label: "susține pe", route: "vhv", mid: 700,
+  { from: "covaciu", to: "pisicu", label: "susține pe", route: "vhv", mid: 700,
     detail: "Directorul companiei de apă susține constructorul de casă. Old&New Construct primește lucrări atât de la CAO, cât și de la Primăria Slatina.", src: "harta" },
 
-  { from: "oldnew", to: "oprescu", label: "achită comisionul de „10%”", route: "vhv", mid: 614,
+  { from: "pisicu", to: "oprescu", label: "achită comisionul de „10%”", route: "vhv", mid: 614,
     detail: "Pe hartă, relația dintre constructor și președintele Consiliului Județean este descrisă direct ca un comision de zece la sută.", src: "harta" },
 
-  { from: "oprescu", to: "oldnew", label: "acordă proiecte direct lui", route: "vhv", mid: 646,
+  { from: "oprescu", to: "pisicu", label: "acordă proiecte direct lui", route: "vhv", mid: 646,
     detail: "Contractele merg în ambele sensuri: proiecte publice într-o direcție, comision în cealaltă.", src: "harta" },
 
-  { from: "emilmot", to: "oldnew", label: "acordă proiecte direct lui", route: "vhv", mid: 640,
+  { from: "emilmot", to: "pisicu", label: "acordă proiecte direct lui", route: "vhv", mid: 640,
     detail: "Firma de construcții Old&New Construct primește lucrări de la Compania de Apă Olt și de la Primăria Slatina. Mircea „Pisicu” Ungureanu, omul din spatele ei, și-a aliniat interesele cu ale baronului local, participând la fondul de protocol al rețelei.", src: "documentar" },
 
   { from: "oprescu", to: "oltdrum", label: "controlează", route: "vhv", mid: 505,
     detail: "Olt Drum este societatea Consiliului Județean Olt. Nu se rezumă la a cumpăra de la firmele grupului: merge cu ele în tandem la licitații.", src: "harta" },
 
-  { from: "mineralport", to: "oltdrum", label: "vinde asfalt și balast către", route: "vhv", mid: 604,
+  { from: "postolache", to: "oltdrum", label: "vinde asfalt și balast către", route: "vhv", mid: 604,
     detail: "Mineralport vinde asfalt și balast la prețuri discutabile către Olt Drum, compania Consiliului Județean Olt. Totul pe banii publici.", src: "harta" },
 
   { from: "oltdrum", to: "postolache", label: "acordă proiecte lui", route: "hvh", mid: 690,
@@ -489,7 +434,7 @@ const EDGES = [
   { from: "sga", to: "titiriga", label: "acordă proiecte lui", route: "vhv", mid: 812,
     detail: "Adi Barbu, instalat și menținut la SGA Olt, acordă lucrări către administratorul Wagramer.", src: "harta" },
 
-  { from: "sga", to: "wagramer", label: "acordă proiecte lui", route: "vhv", mid: 884,
+  { from: "sga", to: "titiriga", label: "acordă proiecte lui", route: "vhv", mid: 884,
     detail: "Dinspre SGA Olt, Wagramer primește lucrări directe.", src: "harta" },
 
   { from: "adrianbarbu", to: "sga", label: "este Director la", route: "line",
@@ -506,28 +451,16 @@ const EDGES = [
 
   { from: "cao", to: "sorin", label: "acordă proiecte lui", route: "vhv", mid: 972,
     detail: "CAO mai atribuie lucrări către încă doi jucători cruciali: Condor Păduraru și firma-fanion a lui Oprescu, Wagramer Termo 2000.", src: "harta" },
-
-  { from: "pisicu", to: "oldnew", label: "controlează", route: "line",
-    detail: "Mircea „Pisicu” Ungureanu și-a aliniat interesele cu ale baronului local, participând la fondul de protocol al rețelei. Dosarele lui de corupție și evaziune au fost tărăgănate sau clasate.", src: "harta" },
-
-  { from: "sorin", to: "condor", label: "controlează", route: "line",
-    detail: "Condor Păduraru este unul dintre cei doi jucători cruciali către care CAO atribuie lucrări.", src: "harta" },
-
-  { from: "titiriga", to: "wagramer", label: "este administratorul de fațadă al", route: "line",
-    detail: "Fost șofer de taxi, Valeriu Țițirigă ajunge administratorul formal al firmei prin care trec sute de milioane de lei din bani publici.", src: "harta" },
+
+
+
 
   { from: "titiriga", to: "sorin", label: "fostul șofer al tatălui lui", route: "hvh", mid: 1256,
     detail: "Legătura care arată cât de scurtă e distanța dintre firmele care par independente: administratorul Wagramer a fost șofer la compania Condor Păduraru.", src: "harta" },
+
+
 
-  { from: "oprescu", to: "cjolt", label: "deține funcția de", route: "line",
-    detail: "Un început tumultuos, cu acuzații de omor și probe de sânge controversate. Totuși, în doar câțiva ani, Marius Oprescu trece de la statutul de inculpat la președinte al Consiliului Județean Olt.", src: "documentar" },
-
-  { from: "emilmot", to: "primarslatina", label: "deține funcția de", route: "line",
-    detail: "Emil Moț conduce Primăria Slatina, în timp ce nașul său preia Consiliul Județean. Pierde municipiul în vara lui 2024.", src: "documentar" },
-
-
-  { from: "busi", to: "anif", label: "a condus", route: "line",
-    detail: "Florin „Busi” Barbu conduce ANIF înainte de a promova ca ministru al Agriculturii — instituția care virează peste 500 de milioane de lei către Wagramer.", src: "documentar" },
+
 
   { from: "sri", to: "covaciu", label: "filiera numirilor", route: "vhv", mid: 566,
     detail: "Pe filiera SRI ajung la conducerea Companiei de Apă Olt atât Vasile Covaciu, cât și Marius Cătălin Ușurelu.", src: "harta" },
@@ -581,8 +514,6 @@ const KIND_META = {
   "office":          { label: "Instituție publică", short: "INST" },
   "company-state":   { label: "Companie de stat",   short: "STAT" },
   "company-private": { label: "Companie privată",   short: "PRIV" },
-  "service":         { label: "Serviciu",           short: "SRI"  },
-  "event":           { label: "Operațiune",         short: "OPER" }
 };
 
 /* ---------- IMAGINI DIN FIGMA ----------

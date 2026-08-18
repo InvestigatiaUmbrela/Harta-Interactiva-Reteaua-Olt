@@ -26,26 +26,17 @@ const GRAPH = {
    "h": 121
   },
   {
-   "id": "anif",
-   "els": [
-    6
-   ],
-   "x": 2893.4,
-   "y": 189.6,
-   "w": 388.4,
-   "h": 103.5
-  },
-  {
    "id": "busi",
    "els": [
     7,
     10,
-    26
+    26,
+    6
    ],
-   "x": 2940.8,
-   "y": 267,
-   "w": 390.2,
-   "h": 311.5
+   "x": 2893.4,
+   "y": 189.6,
+   "w": 437.6,
+   "h": 388.9
   },
   {
    "id": "carmin",
@@ -90,26 +81,17 @@ const GRAPH = {
    "h": 190.8
   },
   {
-   "id": "cjolt",
-   "els": [
-    27
-   ],
-   "x": 978.1,
-   "y": 585,
-   "w": 587.4,
-   "h": 72.6
-  },
-  {
    "id": "oprescu",
    "els": [
     35,
     41,
-    64
+    64,
+    27
    ],
-   "x": 1081,
-   "y": 644,
-   "w": 559,
-   "h": 441.7
+   "x": 978.1,
+   "y": 585,
+   "w": 661.9,
+   "h": 500.7
   },
   {
    "id": "coldea",
@@ -134,26 +116,17 @@ const GRAPH = {
    "h": 338.5
   },
   {
-   "id": "primarslatina",
-   "els": [
-    43
-   ],
-   "x": 626,
-   "y": 804.4,
-   "w": 196.5,
-   "h": 94.2
-  },
-  {
    "id": "emilmot",
    "els": [
     54,
     57,
-    74
+    74,
+    43
    ],
-   "x": 636,
-   "y": 899,
-   "w": 337,
-   "h": 300.9
+   "x": 626,
+   "y": 804.4,
+   "w": 347,
+   "h": 395.6
   },
   {
    "id": "rada",
@@ -169,48 +142,30 @@ const GRAPH = {
    "h": 383.6
   },
   {
-   "id": "mineralport",
+   "id": "postolache",
    "els": [
+    89,
     82,
+    105,
     79
    ],
    "x": 1759,
    "y": 1249.4,
    "w": 499,
-   "h": 137.6
-  },
-  {
-   "id": "wagramer",
-   "els": [
-    85,
-    80
-   ],
-   "x": 2295,
-   "y": 1249.4,
-   "w": 440.1,
-   "h": 130.6
-  },
-  {
-   "id": "postolache",
-   "els": [
-    89,
-    105
-   ],
-   "x": 1865.3,
-   "y": 1376,
-   "w": 339.4,
-   "h": 302.5
+   "h": 429.1
   },
   {
    "id": "titiriga",
    "els": [
     90,
-    104
+    85,
+    104,
+    80
    ],
-   "x": 2411.4,
-   "y": 1386,
-   "w": 270.1,
-   "h": 306.9
+   "x": 2295,
+   "y": 1249.4,
+   "w": 440.1,
+   "h": 443.5
   },
   {
    "id": "covaciu",
@@ -296,48 +251,30 @@ const GRAPH = {
    "h": 121.6
   },
   {
-   "id": "oldnew",
-   "els": [
-    133,
-    124
-   ],
-   "x": 1088.5,
-   "y": 1854.4,
-   "w": 360.4,
-   "h": 176.3
-  },
-  {
    "id": "pisicu",
    "els": [
     138,
-    141
+    141,
+    133,
+    124
    ],
    "x": 1023,
-   "y": 2013,
-   "w": 475.4,
-   "h": 303.4
-  },
-  {
-   "id": "condor",
-   "els": [
-    131,
-    126
-   ],
-   "x": 2582.1,
    "y": 1854.4,
-   "w": 311.8,
-   "h": 162.3
+   "w": 475.4,
+   "h": 462
   },
   {
    "id": "sorin",
    "els": [
     137,
-    140
+    140,
+    131,
+    126
    ],
    "x": 2581,
-   "y": 1982,
+   "y": 1854.4,
    "w": 354,
-   "h": 329.5
+   "h": 457.1
   }
  ],
  "relations": [
@@ -426,7 +363,7 @@ const GRAPH = {
   {
    "el": 22,
    "from": "stanescu",
-   "to": "cjolt",
+   "to": "oprescu",
    "labelEl": 23,
    "label": "este Mentorul Politic al lui",
    "labelEls": [
@@ -440,7 +377,7 @@ const GRAPH = {
   {
    "el": 29,
    "from": "mariana",
-   "to": "primarslatina",
+   "to": "emilmot",
    "labelEl": 34,
    "label": "este Mama lui",
    "labelEls": [
@@ -463,7 +400,7 @@ const GRAPH = {
    ],
    "viewBox": "0 0 404 1007",
    "d": "M-7.92236e-06 998L15 1006.66L15 989.34L-7.92236e-06 998ZM396 0C391.582 -2.17427e-07 388 3.58172 388 8C388 12.4183 391.582 16 396 16C400.418 16 404 12.4183 404 8C404 3.58172 400.418 2.17408e-07 396 0ZM396 968L397.5 968L396 968ZM13.5 998L13.5 999.5L366 999.5L366 998L366 996.5L13.5 996.5L13.5 998ZM396 968L397.5 968L397.5 8L396 8L394.5 8L394.5 968L396 968ZM366 998L366 999.5C383.397 999.5 397.5 985.397 397.5 968L396 968L394.5 968C394.5 983.74 381.74 996.5 366 996.5L366 998Z",
-   "detail": null,
+   "detail": "Doar ANIF, condus atunci de Florin „Busi” Barbu, a virat peste 500 de milioane de lei către Wagramer pentru modernizarea canalelor de irigații din Olt. Agricultorii locali nu au primit niciun strop de apă pe câmpuri.",
    "src": "harta"
   },
   {
@@ -482,7 +419,7 @@ const GRAPH = {
   },
   {
    "el": 32,
-   "from": "cjolt",
+   "from": "oprescu",
    "to": "spital",
    "labelEl": 28,
    "label": "controlează",
@@ -498,7 +435,7 @@ const GRAPH = {
   {
    "el": 37,
    "from": "spital",
-   "to": "wagramer",
+   "to": "titiriga",
    "labelEl": 59,
    "label": "acordă proiecte lui",
    "labelEls": [
@@ -511,7 +448,7 @@ const GRAPH = {
   },
   {
    "el": 40,
-   "from": "wagramer",
+   "from": "titiriga",
    "to": "oprescu",
    "labelEl": 39,
    "label": "este firma de casă a lui",
@@ -540,7 +477,7 @@ const GRAPH = {
   {
    "el": 48,
    "from": "oprescu",
-   "to": "primarslatina",
+   "to": "emilmot",
    "labelEl": 45,
    "label": "este Nașul lui",
    "labelEls": [
@@ -582,7 +519,7 @@ const GRAPH = {
   {
    "el": 56,
    "from": "rada",
-   "to": "mineralport",
+   "to": "postolache",
    "labelEl": 60,
    "label": "emite ilegal autorizatii pentru",
    "labelEls": [
@@ -595,7 +532,7 @@ const GRAPH = {
   },
   {
    "el": 62,
-   "from": "mineralport",
+   "from": "postolache",
    "to": "oprescu",
    "labelEl": 61,
    "label": "este firma de casă a lui",
@@ -664,7 +601,7 @@ const GRAPH = {
   {
    "el": 71,
    "from": "emilmot",
-   "to": "oldnew",
+   "to": "pisicu",
    "labelEl": 77,
    "label": "acordă proiecte direct lui",
    "labelEls": [
@@ -677,7 +614,7 @@ const GRAPH = {
   },
   {
    "el": 72,
-   "from": "oldnew",
+   "from": "pisicu",
    "to": "emilmot",
    "labelEl": 95,
    "label": "achită comisionul de “10%”",
@@ -729,7 +666,7 @@ const GRAPH = {
    ],
    "viewBox": "0 0 316 140",
    "d": "M8.66016 0L-9.15527e-05 15H17.3204L8.66016 0ZM315.66 132C315.66 127.582 312.078 124 307.66 124C303.242 124 299.66 127.582 299.66 132C299.66 136.418 303.242 140 307.66 140C312.078 140 315.66 136.418 315.66 132ZM8.66016 13.5H7.16016V102H8.66016H10.1602V13.5H8.66016ZM38.6602 132V133.5L307.66 133.5V132V130.5L38.6602 130.5V132ZM8.66016 102H7.16016C7.16016 119.397 21.2632 133.5 38.6602 133.5V132V130.5C22.92 130.5 10.1602 117.74 10.1602 102H8.66016Z",
-   "detail": null,
+   "detail": "Mineralport vinde asfalt și balast la prețuri discutabile către Olt Drum, compania Consiliului Județean Olt. Totul pe banii publici.",
    "src": "harta"
   },
   {
@@ -763,7 +700,7 @@ const GRAPH = {
   {
    "el": 107,
    "from": "titiriga",
-   "to": "condor",
+   "to": "sorin",
    "labelEl": 111,
    "label": "fostul șofer al tatălui lui",
    "labelEls": [
@@ -771,13 +708,13 @@ const GRAPH = {
    ],
    "viewBox": "0 0 300 308",
    "d": "M218.499 299L233.499 307.66L233.499 290.34L218.499 299ZM2.76566e-05 8C2.78497e-05 12.4183 3.58175 16 8.00003 16C12.4183 16 16 12.4183 16 8C16 3.58172 12.4183 -1.9313e-07 8.00003 0C3.58175 1.93128e-07 2.74634e-05 3.58172 2.76566e-05 8ZM268 7.99999L268 9.49999L268 7.99999ZM298 269L296.5 269L298 269ZM231.999 299L231.999 300.5L268 300.5L268 299L268 297.5L231.999 297.5L231.999 299ZM298 269L299.5 269L299.5 38L298 38L296.5 38L296.5 269L298 269ZM268 7.99999L268 6.49999L8.00003 6.5L8.00003 8L8.00003 9.5L268 9.49999L268 7.99999ZM298 38L299.5 38C299.5 20.603 285.397 6.49999 268 6.49999L268 7.99999L268 9.49999C283.74 9.49999 296.5 22.2599 296.5 38L298 38ZM268 299L268 300.5C285.397 300.5 299.5 286.397 299.5 269L298 269L296.5 269C296.5 284.74 283.74 297.5 268 297.5L268 299Z",
-   "detail": null,
+   "detail": "Legătura care arată cât de scurtă e distanța dintre firmele care par independente: administratorul Wagramer a fost șofer la compania Condor Păduraru.",
    "src": "harta"
   },
   {
    "el": 114,
    "from": "covaciu",
-   "to": "oldnew",
+   "to": "pisicu",
    "labelEl": 109,
    "label": "susține pe",
    "labelEls": [
@@ -886,8 +823,8 @@ const GRAPH = {
   },
   {
    "el": 144,
-   "from": "sorin",
-   "to": "condor",
+   "from": "titiriga",
+   "to": "sorin",
    "labelEl": 147,
    "label": "acordă proiecte lui",
    "labelEls": [
@@ -895,7 +832,7 @@ const GRAPH = {
    ],
    "viewBox": "0 0 947 65",
    "d": "M938 0L929.34 14.9999L946.66 15.0001L938 0ZM938 33.0002L936.5 33.0002L938 33.0002ZM6.65428e-05 63L6.66739e-05 64.5L908 64.4999L908 62.9999L908 61.4999L6.64116e-05 61.5L6.65428e-05 63ZM938 13.5L936.5 13.5L936.5 33.0002L938 33.0002L939.5 33.0002L939.5 13.5L938 13.5ZM908 62.9999L908 64.4999C925.397 64.4999 939.499 50.3971 939.5 33.0002L938 33.0002L936.5 33.0002C936.499 48.7402 923.74 61.4999 908 61.4999L908 62.9999Z",
-   "detail": "Condor Păduraru este unul dintre cei doi jucători cruciali către care CAO atribuie lucrări.",
+   "detail": "Legătura care arată cât de scurtă e distanța dintre firmele care par independente: administratorul Wagramer a fost șofer la compania Condor Păduraru.",
    "src": "harta"
   }
  ],

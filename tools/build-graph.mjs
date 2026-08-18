@@ -32,26 +32,26 @@ const norm = s => (s || "").normalize("NFD")
 const MEMBERS = {
   stanescu:      { img: ["Stanesk", "PSD WHITE 9"], txt: ["Paul STĂNESCU"] },
   delta:         { txt: ["“Stuful din Delta Dunării”"] },
-  anif:          { txt: ["ANIF Min. Agriculturii"] },
-  busi:          { img: ["Busi 2", "PSD WHITE 8"], txt: ["Florin ‘Busi’ Barbu"] },
+  busi:          { img: ["Busi 2", "PSD WHITE 8"],
+                   txt: ["Florin ‘Busi’ Barbu", "ANIF Min. Agriculturii"] },
   carmin:        { img: ["CARMIN WHITE 2"], txt: [["Companie PRIVATĂ", 3580, 296]] },
   mariana:       { img: ["Mariana"], txt: ["Mariana MOȚ"] },
   sri:           { img: ["SRI WHITE 4"] },
   spital:        { txt: ["Spitalul JUDEȚEAN Slatina"] },
-  cjolt:         { txt: ["Președinte CJ OLT"] },
-  oprescu:       { img: ["Opresk", "PSD WHITE 5"], txt: ["Marius OPRESCU"] },
+  oprescu:       { img: ["Opresk", "PSD WHITE 5"],
+                   txt: ["Marius OPRESCU", "Președinte CJ OLT"] },
   coldea:        { img: ["Coldea"], txt: ["Florian COLDEA"] },
   pandarof:      { img: ["Pandarof"], txt: ["Marina PANDAROF"] },
-  primarslatina: { txt: ["Primar SLATINA"] },
-  emilmot:       { img: ["Mot", "PSD WHITE 7"], txt: ["Emil MOȚ"] },
+  emilmot:       { img: ["Mot", "PSD WHITE 7"],
+                   txt: ["Emil MOȚ", "Primar SLATINA"] },
   /* primarul și funcția lui sunt o singură entitate: pe planșă sunt
      lipite oricum, iar săgețile duc când la una, când la cealaltă */
   rada:          { img: ["Nicusor Rada 2", "PSD WHITE 10"],
                    txt: ["Nicușor RADA", "Primar PIATRA-OLT"] },
-  mineralport:   { img: ["MineralportWhite 2"], txt: [["Companie PRIVATĂ", 1899, 1245]] },
-  wagramer:      { img: ["Wagramer 2"], txt: [["Companie PRIVATĂ", 2397, 1245]] },
-  postolache:    { img: ["Postolache 2"], txt: ["Claudiu POSTOLACHE"] },
-  titiriga:      { img: ["Titiriga"], txt: ["VALERIU ȚIȚIRIGĂ"] },
+  postolache:    { img: ["Postolache 2", "MineralportWhite 2"],
+                   txt: ["Claudiu POSTOLACHE", ["Companie PRIVATĂ", 1899, 1245]] },
+  titiriga:      { img: ["Titiriga", "Wagramer 2"],
+                   txt: ["VALERIU ȚIȚIRIGĂ", ["Companie PRIVATĂ", 2397, 1245]] },
   covaciu:       { img: ["Covaciu", "SRI WHITE 6"], txt: ["Vasile COVACIU", ["Director", 846, 1293], ["C.A.O.", 835, 1349]] },
   usurelu:       { img: ["Usurelu", "PSD WHITE 11"], txt: ["Cătălin UȘURELU", ["Director", 374, 1290], ["C.A.O.", 365, 1346]] },
   oltdrum:       { img: ["Olt Drum SA WHITE 2"], txt: [["Companie de STAT", 1390, 1384]] },
@@ -59,10 +59,10 @@ const MEMBERS = {
   adrianbarbu:   { img: ["Adrian Barbu - Panadria 2"], txt: ["Adrian BARBU"] },
   sga:           { txt: ["S.G.A. OLT", ["Director", 2094, 1850]] },
   panadria:      { txt: ["PANADRIA", ["Companie PRIVATĂ", 1704, 1850]] },
-  oldnew:        { txt: ["OLD&NEW CONSTRUCT", ["Companie PRIVATĂ", 1110, 1850]] },
-  pisicu:        { img: ["Pisicu 2"], txt: ["Mircea ‘Pisicu’ Ungureanu"] },
-  condor:        { txt: ["Condor PĂDURARU", ["Companie PRIVATĂ", 2623, 1850]] },
-  sorin:         { img: ["Paduraru 2"], txt: ["Sorin PĂDURARU"] }
+  pisicu:        { img: ["Pisicu 2"],
+                   txt: ["Mircea ‘Pisicu’ Ungureanu", "OLD&NEW CONSTRUCT", ["Companie PRIVATĂ", 1110, 1850]] },
+  sorin:         { img: ["Paduraru 2"],
+                   txt: ["Sorin PĂDURARU", "Condor PĂDURARU", ["Companie PRIVATĂ", 2623, 1850]] }
 };
 
 const DECOR = ["Peace sign 1"];

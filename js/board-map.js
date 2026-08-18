@@ -195,7 +195,9 @@ class BoardMap {
     } else if (this.filters.size) {
       GRAPH.entities.forEach(en => {
         const n = NODE_BY_ID[en.id];
-        if (n && this.filters.has(n.kind)) ents.add(en.id);
+        if (!n) return;
+        const is = [n.kind, ...(n.also || [])];
+        if (is.some(k => this.filters.has(k))) ents.add(en.id);
       });
       GRAPH.relations.forEach((r, i) => {
         if (ents.has(r.from) && ents.has(r.to)) rels.add(i);
