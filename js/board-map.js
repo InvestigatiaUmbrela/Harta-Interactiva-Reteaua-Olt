@@ -395,12 +395,22 @@ class BoardMap {
         const [a, b] = [...pts.values()];
         const dist = Math.hypot(a.x - b.x, a.y - b.y);
         const mid = { x: (a.x + b.x) / 2, y: (a.y + b.y) / 2 };
-        if (pinch.dist > 0) this.zoomAt(dist / pinch.dist, mid.x, mid.y);
+        /* Pinch-ul trebuie să urmeze degetele exact. Dacă lăsăm scara să
+           fie „trasă” de bucla de alunecare, ea rămâne mereu în urmă față
+           de translație și imaginea se leagănă. Aici mergem 1:1. */
+        const ratio = pinch.dist > 0 ? dist / pinch.dist : 1;
+        if (Math.abs(ratio - 1) > 0.004) this.zoomAt(ratio, mid.x, mid.y);
+
         this.target.x += mid.x - pinch.mid.x;
         this.target.y += mid.y - pinch.mid.y;
         this.clamp(this.target);
-        this.view.x = this.target.x; this.view.y = this.target.y;
+
+        this.view.x = this.target.x;
+        this.view.y = this.target.y;
+        this.view.k = this.target.k;
+        this.vel = { x: 0, y: 0 };     // pinch-ul nu aruncă planșa la final
         this.apply();
+
         pinch = { dist, mid };
         this.dragged = true;
         return;

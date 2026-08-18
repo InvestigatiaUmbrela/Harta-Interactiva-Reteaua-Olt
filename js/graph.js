@@ -288,7 +288,9 @@ const GRAPH = {
     "person": [
      91,
      113,
-     84,
+     84
+    ],
+    "company-state": [
      87
     ]
    },
@@ -313,7 +315,9 @@ const GRAPH = {
     "person": [
      92,
      112,
-     83,
+     83
+    ],
+    "company-state": [
      86
     ]
    },
@@ -466,7 +470,7 @@ const GRAPH = {
    ],
    "viewBox": "0 0 1945 18",
    "d": "M0 8.66003C-3.86258e-07 13.0783 3.58172 16.66 8 16.66C12.4183 16.66 16 13.0783 16 8.66003C16 4.24176 12.4183 0.660035 8 0.660034C3.58172 0.660034 3.86258e-07 4.24176 0 8.66003ZM1945 8.6602L1930 -5.22722e-05L1930 17.3205L1945 8.6602ZM8 8.66003L8 10.16L1931.5 10.1602L1931.5 8.6602L1931.5 7.1602L8 7.16003L8 8.66003Z",
-   "detail": "În 2023 rețeaua iese din județ. Documentarul plasează extinderea națională — afacerea cu stuful din Delta Dunării — pe axa Stănescu–Barbu.",
+   "detail": "În 2023 rețeaua iese din județ. Extinderea națională — afacerea cu stuful din Delta Dunării — merge pe axa Stănescu–Barbu.",
    "src": "harta"
   },
   {
@@ -492,7 +496,7 @@ const GRAPH = {
    ],
    "viewBox": "0 0 269 18",
    "d": "M0 8.66028C2.07203e-07 13.0786 3.58172 16.6603 8 16.6603C12.4183 16.6603 16 13.0786 16 8.66028C16 4.242 12.4183 0.660278 8 0.660278C3.58172 0.660279 -2.07203e-07 4.242 0 8.66028ZM269 8.66028L254 2.43097e-05L254 17.3205L269 8.66028ZM8 8.66028L8 10.1603L255.5 10.1603L255.5 8.66028L255.5 7.16028L8 7.16028L8 8.66028Z",
-   "detail": "Pe hartă, relația e bidirecțională: ministrul acordă proiecte, iar firma funcționează ca firmă de casă.",
+   "detail": "Ministrul semnează, firma încasează. În 2025, ANIF a acoperit 92,5% din cifra ei de afaceri.",
    "src": "harta"
   },
   {
@@ -520,7 +524,7 @@ const GRAPH = {
    ],
    "viewBox": "0 0 653 117",
    "d": "M637 7.99997C637 12.4183 640.582 16 645 16C649.418 16 653 12.4183 653 7.99997C653 3.58169 649.418 -2.69565e-05 645 -2.67633e-05C640.582 -2.65702e-05 637 3.5817 637 7.99997ZM5.68866e-07 108L15 116.66L15 99.3398L5.68866e-07 108ZM53.7525 38L52.2525 38L53.7525 38ZM645 7.99997L645 6.49997L83.7525 6.5L83.7525 8L83.7525 9.5L645 9.49997L645 7.99997ZM53.7525 38L52.2525 38L52.2525 78L53.7525 78L55.2525 78L55.2525 38L53.7525 38ZM23.7525 108L23.7525 106.5L13.5 106.5L13.5 108L13.5 109.5L23.7525 109.5L23.7525 108ZM53.7525 78L52.2525 78C52.2525 93.7401 39.4926 106.5 23.7525 106.5L23.7525 108L23.7525 109.5C41.1495 109.5 55.2525 95.397 55.2525 78L53.7525 78ZM83.7525 8L83.7525 6.5C66.3555 6.5 52.2525 20.603 52.2525 38L53.7525 38L55.2525 38C55.2525 22.2599 68.0124 9.5 83.7525 9.5L83.7525 8Z",
-   "detail": "Presa a documentat că Mariana Moț este apropiată a lui Paul Stănescu. Numirea ei într-o funcție de conducere din Ministerul Justiției este, în logica documentarului, piesa care leagă partidul de sistemul judiciar.",
+   "detail": "Mariana Moț este apropiată a lui Paul Stănescu. Numirea ei într-o funcție de conducere din Ministerul Justiției e piesa care leagă partidul de sistemul judiciar.",
    "src": "harta"
   },
   {
@@ -548,7 +552,7 @@ const GRAPH = {
    ],
    "viewBox": "0 0 447 103",
    "d": "M430.66 7.99998C430.66 12.4183 434.242 16 438.66 16C443.078 16 446.66 12.4183 446.66 7.99998C446.66 3.5817 443.078 -1.8989e-05 438.66 -1.87959e-05C434.242 -1.86028e-05 430.66 3.5817 430.66 7.99998ZM8.66038 103L17.3206 88L5.5949e-05 88.0001L8.66038 103ZM38.6603 56.8574L38.6603 58.3574L38.6603 56.8574ZM438.66 7.99998L437.16 7.99998L437.16 26.8574L438.66 26.8574L440.16 26.8574L440.16 7.99998L438.66 7.99998ZM408.66 56.8574L408.66 55.3574L38.6603 55.3574L38.6603 56.8574L38.6603 58.3574L408.66 58.3574L408.66 56.8574ZM8.6603 86.8575L7.1603 86.8575L7.16032 89.5L8.66032 89.5L10.1603 89.5L10.1603 86.8575L8.6603 86.8575ZM38.6603 56.8574L38.6603 55.3574C21.2633 55.3574 7.16022 69.4605 7.1603 86.8575L8.6603 86.8575L10.1603 86.8575C10.1602 71.1173 22.9201 58.3574 38.6603 58.3574L38.6603 56.8574ZM438.66 26.8574L437.16 26.8574C437.16 42.5975 424.4 55.3574 408.66 55.3574L408.66 56.8574L408.66 58.3574C426.057 58.3574 440.16 44.2543 440.16 26.8574L438.66 26.8574Z",
-   "detail": "Baronul ridică scara, locotenentul urcă. Documentarul descrie transferul de putere dintre Paul Stănescu și Marius Oprescu ca pe o aterizare pe roți: relații politice, instituții prietene și o rețea care amortizează orice șoc.",
+   "detail": "Baronul ridică scara, locotenentul urcă. Transferul de putere se face pe relații politice, instituții prietene și o rețea care amortizează orice șoc.",
    "src": "harta"
   },
   {
@@ -634,7 +638,7 @@ const GRAPH = {
    ],
    "viewBox": "0 0 901 489",
    "d": "M6.10352e-05 8.6602L15.0001 -8.09264e-06L15.0001 17.3205L6.10352e-05 8.6602ZM901 480.66C901 485.079 897.418 488.66 893 488.66C888.582 488.66 885 485.079 885 480.66C885 476.242 888.582 472.66 893 472.66C897.418 472.66 901 476.242 901 480.66ZM13.5001 8.66024L13.5001 7.16024L863 7.16281L863 8.66281L863 10.1628L13.5001 10.1602L13.5001 8.66024ZM893 38.6628L894.5 38.6628L894.5 480.66L893 480.66L891.5 480.66L891.5 38.6628L893 38.6628ZM863 8.66281L863 7.16281C880.397 7.16286 894.5 21.2659 894.5 38.6628L893 38.6628L891.5 38.6628C891.5 22.9227 878.74 10.1629 863 10.1628L863 8.66281Z",
-   "detail": "Documentarul o numește firma fanion a lui Oprescu: administrată de fațadă de Valeriu Țițirigă, folosită pentru a sifona milioane de lei din contracte publice pe care chiar el le aranja în calitate de ordonator de credite.",
+   "detail": "E firma fanion a lui Oprescu: administrată de fațadă de Valeriu Țițirigă și folosită pentru a scoate milioane din contracte publice pe care chiar el le aranja, în calitate de ordonator de credite.",
    "src": "harta"
   },
   {

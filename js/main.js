@@ -174,8 +174,7 @@ function renderDrawer(sel) {
     const kinds = [n.kind, ...(n.also || [])]
       .map(k => KIND_META[k] && KIND_META[k].label)
       .filter(Boolean);
-    drawer.kind.textContent = [kinds.join(" · "), `sursă: ${n.src}`]
-      .filter(Boolean).join(" · ");
+    drawer.kind.textContent = kinds.join(" · ");
     drawer.title.textContent = n.label.join(" ");
     drawer.role.textContent = n.role;
 
@@ -190,7 +189,7 @@ function renderDrawer(sel) {
     drawer.body.innerHTML = `
       <p class="drawer__lead">${n.lead}</p>
       ${affil}
-      <h4 class="drawer__h">Din documentar</h4>
+      <h4 class="drawer__h">Ce se știe</h4>
       <ul class="facts">${n.facts.map(f => `<li>${f}</li>`).join("")}</ul>
       <h4 class="drawer__h">Legături · ${rels.length}</h4>
       <div class="links">
@@ -206,7 +205,7 @@ function renderDrawer(sel) {
   } else {
     const e = GRAPH.relations[sel.index];
     const a = NODE_BY_ID[e.from], b = NODE_BY_ID[e.to];
-    drawer.kind.textContent = `Relație · sursă: ${e.src || "harta"}`;
+    drawer.kind.textContent = "Legătură";
     drawer.title.textContent = e.label || "Legătură pe planșă";
     drawer.role.textContent = `${a.label.join(" ")}  →  ${b.label.join(" ")}`;
 
@@ -214,8 +213,8 @@ function renderDrawer(sel) {
        în documentar — le arătăm ca atare, fără să inventăm o afirmație */
     const lead = e.detail
       ? `<p class="drawer__lead">${e.detail}</p>`
-      : `<p class="drawer__lead">Legătura e desenată pe planșă. Documentarul
-           nu detaliază separat această relație, dincolo de ce scrie săgeata.</p>`;
+      : `<p class="drawer__lead">Legătura există în rețea. Detaliile ei nu au
+           fost făcute publice dincolo de ce scrie pe săgeată.</p>`;
 
     drawer.body.innerHTML = `
       ${lead}

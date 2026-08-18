@@ -1,31 +1,29 @@
 /* ============================================================
-   REȚEAUA OLT — date extrase din harta Figma + transcriptul
-   documentarului. Fiecare nod și fiecare relație poartă o sursă:
-     'harta'      = apare explicit pe harta din Figma
-     'documentar' = afirmat în naraţiunea documentarului
+   REȚEAUA OLT — persoanele, instituțiile, firmele și legăturile
+   dintre ele, așa cum sunt desenate pe hartă.
    ============================================================ */
 
 const DISCLAIMER =
-  "Informațiile de mai jos reproduc afirmațiile din documentar și din materialele " +
-  "de presă citate în el. Toate persoanele menționate beneficiază de prezumția de nevinovăție.";
+  "Persoanele menționate beneficiază de prezumția de nevinovăție. " +
+  "Acolo unde există dosare penale, ele sunt în lucru sau au fost clasate.";
 
 /* ---------- NODURI ---------- */
 /* kind: person | office | company-state | company-private
    also  = ce mai este entitatea, pentru filtre
-   affil = apartenențe pe planșă: PSD, SRI */
+   affil = afilieri: PSD, SRI */
 
 const NODES = [
   {
     id: "stanescu", kind: "person", x: 690, y: 215,
     label: ["Paul", "STĂNESCU"], eyebrow: "PSD",
     role: "Baronul. Mentorul politic al rețelei.",
-    lead: "Politicianul care a cultivat structura din Olt și care, în goana după putere, a scos cândva toată România în stradă. În documentar apare drept omul care ridică scara pe care urcă toți ceilalți.",
+    lead: "Politicianul care a cultivat structura din Olt și care, în goana după putere, a scos cândva toată România în stradă. El e omul care ridică scara pe care urcă toți ceilalți.",
     facts: [
       "Mentorul politic al lui Marius Oprescu, președintele Consiliului Județean Olt.",
       "O propulsează pe Mariana Moț în funcția de secretar de stat în Ministerul Justiției.",
       "Îl instalează pe Florin „Busi” Barbu la ANIF, iar ulterior acesta ajunge ministru al Agriculturii.",
       "În 2023 rețeaua se extinde la nivel național prin afacerea cu stuful din Delta Dunării.",
-      "Documentarul îl leagă de Sorin Grindeanu, actualul lider PSD, drept omul care a mișcat sforile pentru Stănescu și Barbu."
+      "În spatele lui stă Sorin Grindeanu, actualul lider PSD — omul care a mișcat sforile și pentru Stănescu, și pentru Barbu."
     ],
     affil: ["PSD"],
     src: "harta"
@@ -34,7 +32,7 @@ const NODES = [
     id: "oprescu", kind: "person", x: 500, y: 425,
     label: ["Marius", "OPRESCU"], eyebrow: "PSD",
     role: "Președintele CJ Olt. Baronul local.",
-    lead: "Trece în câțiva ani de la statutul de inculpat într-un dosar de ucidere din culpă la președinte al Consiliului Județean Olt. Documentarul îl descrie drept nodul prin care trec contractele publice ale județului.",
+    lead: "Trece în câțiva ani de la statutul de inculpat într-un dosar de ucidere din culpă la președinte al Consiliului Județean Olt. Prin el trec contractele publice ale județului.",
     facts: [
       "3 octombrie 2013, Piatra Olt: un Toyota Hilux achiziționat la ISU, folosit nelegal ca mașină personală, lovește o căruță nesemnalizată cu patru persoane. Un bărbat de 34 de ani moare după câteva săptămâni.",
       "Refuză etilotestul; recoltarea probei de sânge se face într-un cabinet, fără supravegherea polițiștilor.",
@@ -43,8 +41,9 @@ const NODES = [
       "Este nașul lui Emil Moț și cumnatul lui Nicușor Rada, primarul din Piatra-Olt.",
       "În 2009 apare în sala Consiliului Județean Olt, în dreapta interlopului Bercea Mondial, la ceremonia în care acesta e numit „președintele romilor”.",
       "Ca președinte al CJ Olt, controlează Spitalul Județean de Urgență Slatina și societatea Olt Drum.",
-      "Este ordonator de credite: decide traseul banilor publici din județ — drumuri, spital, companii proprii, achiziții europene.",
-      "Prin CJ Olt s-a făcut cea mai scumpă achiziție de microbuze școlare electrice din România: aproximativ 262.000 € bucata."
+      "Ca ordonator de credite, decide traseul banilor publici din județ: drumuri, spital, companii proprii, achiziții europene.",
+      "Prin CJ Olt s-a făcut cea mai scumpă achiziție de microbuze școlare electrice din România: aproximativ 262.000 € bucata.",
+      "Este unul dintre cei cinci prim-vicepreședinți ai PSD, sub Sorin Grindeanu — nu un simplu șef de consiliu județean."
     ],
     also: ["office"],
     affil: ["PSD"],
@@ -84,11 +83,11 @@ const NODES = [
     id: "rada", kind: "person", x: 890, y: 450,
     label: ["Nicușor", "RADA"], eyebrow: "PSD",
     role: "Primarul din Piatra-Olt. Cumnatul lui Oprescu.",
-    lead: "Semnătura lui deschide balastierele de pe Lunca Oltului — cheia întregii exploatări de agregate minerale. Documentarul îl descrie ca fiind ținut în funcție prin fonduri alocate de cumnatul său de la Consiliul Județean.",
+    lead: "Semnătura lui deschide balastierele de pe Lunca Oltului — cheia întregii exploatări de agregate minerale. E ținut în funcție cu fonduri alocate de cumnatul său de la Consiliul Județean.",
     facts: [
       "Emite autorizații de construire pentru balastiere pe terenuri agricole, fără scoatere din circuitul agricol.",
       "ANRM dă permise doar pe unele tarlale, dar excavatoarele intră și în perimetre neautorizate.",
-      "Rezultatul, spune documentarul: dezastru ecologic pe Lunca Oltului.",
+      "Rezultatul: dezastru ecologic pe Lunca Oltului.",
       "În schimb, Consiliul Județean alocă fonduri suplimentare primăriei pe care o conduce."
     ],
     also: ["office"],
@@ -111,13 +110,16 @@ const NODES = [
     id: "busi", kind: "person", x: 1220, y: 250,
     label: ["Florin ‘Busi’", "BARBU"], eyebrow: "PSD",
     role: "Ministrul Agriculturii. Fostul șef al ANIF.",
-    lead: "Deputat PSD de Olt, apropiat de Paul Stănescu, instalat la ANIF și promovat ministru al Agriculturii. În jurul lui, spune documentarul, amendamentele par să apară din neant.",
+    lead: "Deputat PSD de Olt, apropiat de Paul Stănescu, instalat la ANIF și promovat ministru al Agriculturii. În jurul lui, amendamentele apar din neant.",
     facts: [
       "Sub conducerea lui, ANIF a virat peste 500 de milioane de lei către Wagramer pentru modernizarea canalelor de irigații din Olt.",
       "Agricultorii locali nu au primit niciun strop de apă pe câmpuri — semn că lucrările fie nu au fost executate, fie au fost făcute de mântuială.",
       "Invocă paludicultura și susține că schimbările legislative din Deltă respectă regulile Uniunii Europene.",
       "Stufărișurile din Delta Dunării au fost recategorizate ca pășuni printr-o lege modificată pe repede înainte.",
-      "De la ANIF promovează ministru al Agriculturii, cu rețeaua din Olt în spate."
+      "De la ANIF promovează ministru al Agriculturii, cu rețeaua din Olt în spate.",
+      "În total, ANIF a redirecționat către firmele de casă din Olt circa 837 de milioane de euro.",
+      "La loturile de irigații câștigate de firmele din Olt nu s-a înscris niciun contracandidat.",
+      "În 2025, ANIF avea ea însăși o datorie la stat de circa 28 de milioane de euro."
     ],
     also: ["office"],
     affil: ["PSD"],
@@ -127,9 +129,12 @@ const NODES = [
     id: "carmin", kind: "company-private", x: 1450, y: 185,
     label: ["CARMIN"],
     role: "Firma de casă de la vârful ministerului.",
-    lead: "Companie privată descrisă pe hartă drept firma de casă a lui Florin „Busi” Barbu, către care acesta acordă proiecte.",
+    lead: "Firma de casă a lui Florin „Busi” Barbu. Din ministerul lui pleacă proiectele, la ea ajung.",
     facts: [
-      "Relația e reciprocă pe hartă: el acordă proiecte, ea funcționează ca firmă de casă."
+      "Doar în decembrie 2025 a prins loturi de irigații de aproape 100 de milioane de euro.",
+      "Circa 13 milioane de euro în trei ani, până când a venit rândul irigațiilor.",
+      "În decembrie 2025 a prins loturi de circa 500 de milioane de lei — aproape 100 de milioane de euro.",
+      "În 2025, ANIF a acoperit 92,5% din cifra ei de afaceri; în 2023, 160 de milioane de euro."
     ],
     src: "harta"
   },
@@ -150,10 +155,10 @@ const NODES = [
     id: "coldea", kind: "person", x: 150, y: 312,
     label: ["Florian", "COLDEA"],
     role: "Numele care aduce în discuție protecția informativă.",
-    lead: "Marina Pandarov este cunoscută în presă drept „blonda lui Coldea”. Documentarul folosește această legătură pentru a pune întrebarea protecției informative de care ar fi beneficiat rețeaua.",
+    lead: "Marina Pandarov este cunoscută în presă drept „blonda lui Coldea”. Legătura ridică întrebarea protecției informative de care s-a bucurat rețeaua.",
     facts: [
-      "Legătura apare pe hartă ca sprijin acordat Marinei Pandarov.",
-      "Ridică întrebarea de ce rețeaua PSD Olt nu a fost deranjată ani la rând."
+      "Îi acordă sprijin Marinei Pandarov.",
+      "De aici întrebarea de ce rețeaua PSD Olt nu a fost deranjată ani la rând."
     ],
     affil: ["SRI"],
     src: "harta"
@@ -179,7 +184,11 @@ const NODES = [
     facts: [
       "Ajunge director pe filiera SRI.",
       "Interceptările din dosar surprind negocierea cantităților.",
-      "Este fostul director al companiei de apă din Slatina din relatările de presă."
+      "A fost director general al Companiei de Apă Olt în perioada marilor licitații.",
+      "Ca director general al Companiei de Apă Olt, avea datoria să verifice garanțiile bancare depuse la licitații. Nu a făcut-o.",
+      "La o licitație de circa 106 milioane de lei pentru extinderea rețelelor de apă, comisia a acceptat o garanție emisă de o entitate spaniolă fără drept legal de a emite garanții în România.",
+      "Parchetul European a găsit 18 scrisori de garanție false, depuse de cinci firme din Olt, însumând 96 de milioane de lei.",
+      "Ministerul Investițiilor a cerut, în decembrie 2025, returnarea a 25% din valoarea contractului, pentru încălcarea tratamentului egal între ofertanți."
     ],
     affil: ["PSD"],
     src: "harta"
@@ -192,7 +201,7 @@ const NODES = [
     facts: [
       "Legătura de familie cu primarul Slatinei.",
       "Numirea vine pe filiera serviciilor.",
-      "Pe hartă apare susținând Old&New Construct."
+      "Susține Old&New Construct, constructorul de casă al orașului."
     ],
     affil: ["SRI"],
     src: "harta"
@@ -205,7 +214,9 @@ const NODES = [
     facts: [
       "Conducerea vine pe filiera SRI: Vasile Covaciu și Cătălin Ușurelu.",
       "Alimentează cu proiecte Old&New Construct, Panadria și Condor Păduraru.",
-      "După scandalul din 2024, rețeaua își pierde accesul la robinetul de bani de aici."
+      "După scandalul din 2024, rețeaua își pierde accesul la robinetul de bani de aici.",
+      "Curtea de Conturi nu a mai controlat compania de aproximativ zece ani.",
+      "Prin licitațiile ei au trecut zeci de milioane de euro din fonduri europene către firmele de casă ale rețelei."
     ],
     src: "harta"
   },
@@ -246,7 +257,11 @@ const NODES = [
       "Prin Wagramer au trecut peste 500 de milioane de lei de la ANIF, pentru irigații din care agricultorii nu au primit apă.",
       "Aproape 15 milioane de lei de la Spitalul Județean Slatina, pentru lucrări evaluate la de trei ori mai puțin.",
       "Primește lucrări directe dinspre SGA Olt.",
-      "Prin Panadria apar plăți circulare pe servicii fără acoperire."
+      "Prin Panadria apar plăți circulare pe servicii fără acoperire.",
+      "Firma se numea Fashion Kiss și vindea blugi. A devenit constructor abia sub aripa PSD.",
+      "Între 2021 și 2024 a rulat circa 429 de milioane de lei, jumătate doar în 2024, cu aproximativ 100 de angajați.",
+      "În decembrie 2025 a prins două loturi de irigații de la ANIF: 589 și 185 de milioane de lei — circa 155 de milioane de euro.",
+      "În 2025, ANIF a acoperit 95% din cifra ei de afaceri. În doi ani, agenția i-a virat circa 312 milioane de euro."
     ],
     also: ["company-private"],
     src: "harta"
@@ -293,8 +308,8 @@ const NODES = [
     lead: "Și-a aliniat interesele cu ale baronului local, participând la fondul de protocol al rețelei. Istoricul lui penal — dosare de corupție și evaziune — a fost tărăgănat sau clasat.",
     facts: [
       "Firma lui, Old&New Construct, primește lucrări de la Compania de Apă Olt și de la Primăria Slatina.",
-      "Pe planșă, firma apare achitând un comision de „10%” către primarul Slatinei, de la care primește proiecte direct.",
-      "Documentarul spune că rețeaua și-a protejat membrii, permițându-i să pice mereu în picioare.",
+      "Firma achită un comision de zece la sută către primarul Slatinei, de la care primește proiecte direct.",
+      "Rețeaua își protejează membrii: dosarele lui de corupție și evaziune au fost tărăgănate sau clasate, iar el a picat mereu în picioare.",
       "Rezultatul: drenarea resurselor publice și menținerea circuitului șpăgilor în sistem."
     ],
     also: ["company-private"],
@@ -307,7 +322,10 @@ const NODES = [
     lead: "Primește proiecte prin Compania de Apă Olt. Legătura lui cu Valeriu Țițirigă — fostul șofer al tatălui său — arată cât de scurtă e distanța dintre firmele care par independente.",
     facts: [
       "Condor Păduraru este unul dintre cei doi jucători cruciali pe zona de apă, alimentat cu lucrări de Compania de Apă Olt.",
-      "Valeriu Țițirigă, administratorul de fațadă al Wagramer, a fost șoferul tatălui său."
+      "Valeriu Țițirigă, administratorul de fațadă al Wagramer, a fost șoferul tatălui său.",
+      "Circa 60 de milioane de euro cifră de afaceri în ultimii patru ani.",
+      "A mers asociat cu Wagramer la ambele licitații de irigații câștigate de aceasta.",
+      "Apare și în dosarul scrisorilor de garanție false de la Compania de Apă Olt."
     ],
     also: ["company-private"],
     src: "harta"
@@ -319,22 +337,22 @@ const NODES = [
 
 const EDGES = [
   { from: "stanescu", to: "oprescu", label: "este Mentorul Politic al lui", route: "vhv", mid: 232,
-    detail: "Baronul ridică scara, locotenentul urcă. Documentarul descrie transferul de putere dintre Paul Stănescu și Marius Oprescu ca pe o aterizare pe roți: relații politice, instituții prietene și o rețea care amortizează orice șoc.", src: "harta" },
+    detail: "Baronul ridică scara, locotenentul urcă. Transferul de putere se face pe relații politice, instituții prietene și o rețea care amortizează orice șoc.", src: "harta" },
 
   { from: "stanescu", to: "mariana", label: "o propulsează în funcția de Secretar de Stat în Ministerul Justiției", route: "hvh", mid: 430,
-    detail: "Presa a documentat că Mariana Moț este apropiată a lui Paul Stănescu. Numirea ei într-o funcție de conducere din Ministerul Justiției este, în logica documentarului, piesa care leagă partidul de sistemul judiciar.", src: "harta" },
+    detail: "Mariana Moț este apropiată a lui Paul Stănescu. Numirea ei într-o funcție de conducere din Ministerul Justiției e piesa care leagă partidul de sistemul judiciar.", src: "harta" },
 
   { from: "stanescu", to: "busi", label: "l-a instalat pe", route: "hvh", mid: 950,
     detail: "Florin „Busi” Barbu este descris drept protejat al grupării și om de bază al lui Paul Stănescu. Instalat la ANIF, ajunge ulterior ministru al Agriculturii.", src: "harta" },
 
   { from: "stanescu", to: "delta", label: "împreună cu", route: "hvh", mid: 1120,
-    detail: "În 2023 rețeaua iese din județ. Documentarul plasează extinderea națională — afacerea cu stuful din Delta Dunării — pe axa Stănescu–Barbu.", src: "harta" },
+    detail: "În 2023 rețeaua iese din județ. Extinderea națională — afacerea cu stuful din Delta Dunării — merge pe axa Stănescu–Barbu.", src: "harta" },
 
   { from: "busi", to: "delta", label: "împreună cu", route: "vhv", mid: 150,
     detail: "Stufărișurile din Deltă sunt recategorizate ca pășuni printr-o lege modificată pe repede înainte, iar Barbu, ministru al Agriculturii, invocă paludicultura și conformitatea cu regulile UE.", src: "harta" },
 
   { from: "busi", to: "carmin", label: "acordă proiecte către", route: "hvh", mid: 1330,
-    detail: "Pe hartă, relația e bidirecțională: ministrul acordă proiecte, iar firma funcționează ca firmă de casă.", src: "harta" },
+    detail: "Ministrul semnează, firma încasează. În 2025, ANIF a acoperit 92,5% din cifra ei de afaceri.", src: "harta" },
 
   { from: "carmin", to: "busi", label: "este firma de casă a lui", route: "hvh", mid: 1330, offset: 26,
     detail: "Tiparul se repetă identic la fiecare nivel al rețelei: instituția publică pe de o parte, firma de casă pe cealaltă, iar între ele o singură persoană.", src: "harta" },
@@ -370,7 +388,7 @@ const EDGES = [
     detail: "Al doilea nod al lui Oprescu este pe agregate minerale: Mineralport, administrată de Claudiu Postolache, și familia de firme Unimineral.", src: "harta" },
 
   { from: "titiriga", to: "oprescu", label: "este firma de casă a lui", route: "vhv", mid: 348,
-    detail: "Documentarul o numește firma fanion a lui Oprescu: administrată de fațadă de Valeriu Țițirigă, folosită pentru a sifona milioane de lei din contracte publice pe care chiar el le aranja în calitate de ordonator de credite.", src: "harta" },
+    detail: "E firma fanion a lui Oprescu: administrată de fațadă de Valeriu Țițirigă și folosită pentru a scoate milioane din contracte publice pe care chiar el le aranja, în calitate de ordonator de credite.", src: "harta" },
 
   { from: "coldea", to: "pandarof", label: "o sprijină pe", route: "vh",
     detail: "Marina Pandarov este cunoscută în presă drept „blonda lui Coldea”. Numele aduce în discuție posibila protecție informativă și întrebarea de ce rețeaua PSD Olt a fost lăsată în pace atâția ani.", src: "harta" },
@@ -394,7 +412,7 @@ const EDGES = [
     detail: "Directorul companiei de apă susține constructorul de casă. Old&New Construct primește lucrări atât de la CAO, cât și de la Primăria Slatina.", src: "harta" },
 
   { from: "pisicu", to: "oprescu", label: "achită comisionul de „10%”", route: "vhv", mid: 614,
-    detail: "Pe hartă, relația dintre constructor și președintele Consiliului Județean este descrisă direct ca un comision de zece la sută.", src: "harta" },
+    detail: "Zece la sută din contract se întoarce ca șpagă. Așa se plătește accesul la banii publici ai orașului.", src: "harta" },
 
   { from: "oprescu", to: "pisicu", label: "acordă proiecte direct lui", route: "vhv", mid: 646,
     detail: "Contractele merg în ambele sensuri: proiecte publice într-o direcție, comision în cealaltă.", src: "harta" },
@@ -477,22 +495,28 @@ const TIMELINE = [
 /* ---------- CIFRE ---------- */
 
 const FIGURES = [
+  { value: 837, prefix: "", suffix: " mil. €", label: "virați de ANIF către firmele de casă din Olt",
+    note: "agenția de îmbunătățiri funciare, din subordinea Ministerului Agriculturii" },
+  { value: 255, prefix: "", suffix: " mil. €", label: "într-o singură lună, decembrie 2025",
+    note: "loturi de irigații prinse de două firme din rețea" },
   { value: 262000, prefix: "", suffix: " €", label: "cel mai scump microbuz școlar din România",
     note: "cumpărat la Consiliul Județean Olt — de peste trei ori estimarea europeană" },
+  { value: 96, prefix: "", suffix: " mil. lei", label: "în garanții bancare false la compania de apă",
+    note: "18 scrisori depuse de cinci firme din Olt, emise de o entitate fără drept legal" },
+  { value: 0, prefix: "", suffix: "", label: "contracandidați la loturile de irigații",
+    note: "firmele din Olt au fost singurele care au depus ofertă" },
+  { value: 95, prefix: "", suffix: " %", label: "din cifra de afaceri a Wagramer vine de la ANIF",
+    note: "o firmă care în 2010 vindea blugi, cu circa 100 de angajați azi" },
   { value: 250, prefix: "", suffix: " mil. €", label: "fonduri europene pentru microbuze electrice",
     note: "program gândit pentru 3.200 de vehicule la nivel național" },
   { value: 1300, prefix: "≈ ", suffix: "", label: "microbuze cumpărate din cele 3.200 promise",
     note: "banii s-au topit după aproximativ o treime din flotă" },
-  { value: 500, prefix: "peste ", suffix: " mil. lei", label: "virați de ANIF către Wagramer",
-    note: "pentru irigații din care agricultorii nu au primit niciun strop de apă" },
-  { value: 15, prefix: "≈ ", suffix: " mil. lei", label: "plătiți de Spitalul Județean către Wagramer",
-    note: "pentru lucrări evaluate la de trei ori mai puțin" },
-  { value: 10, prefix: "", suffix: " %", label: "comisionul de pe harta rețelei",
-    note: "achitat de constructorul de casă către președintele CJ" }
+  { value: 10, prefix: "", suffix: " ani", label: "de când Curtea de Conturi n-a mai trecut pe la compania de apă",
+    note: "fiica șefului instituției de control lucrase acolo" }
 ];
 
 /* Un singur tag pentru afiliere, alături de tipuri. Aprinde toate
-   siglele de partid și de serviciu de pe planșă. */
+   siglele de partid și de serviciu. */
 const AFFIL_TAG = { key: "AFILIERE", label: "Afiliere", facets: ["PSD", "SRI"] };
 
 const KIND_META = {

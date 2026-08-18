@@ -661,7 +661,9 @@ button { font: inherit; color: inherit; cursor: pointer; }
 /* ---------- 11. RESPONSIVE ---------- */
 @media (max-width: 860px) {
   .topbar__nav a { padding: 0.35rem 0.5rem; font-size: 0.62rem; }
-  .map__stage { height: 72vh; }
+  /* pe telefon planșa stă într-un pătrat: rămâne loc de degete pentru
+     scroll pe lângă ea, fără să prinzi harta din greșeală */
+  .map__stage { height: auto; aspect-ratio: 1 / 1; }
   .modal__card { max-height: 88vh; }
   .modal__head { padding: 1.2rem 3rem 1rem 1.1rem; gap: 0.9rem; }
   .modal__body { padding: 1.2rem 1.1rem 1.5rem; }
