@@ -111,7 +111,7 @@ function mountFilters(map) {
    ============================================================ */
 const drawer = {
   root: null, card: null, kind: null, title: null, role: null, body: null,
-  shot: null, img: null, lastFocus: null, lockedAt: null
+  shot: null, img: null, lastFocus: null
 };
 
 function initDrawer(map) {
@@ -126,6 +126,7 @@ function initDrawer(map) {
 
   $("#modal-close").addEventListener("click", () => map.clear());
   $("#modal-veil").addEventListener("click", () => map.clear());
+  bindScrollContainment(drawer.root);
 
   drawer.body.addEventListener("click", ev => {
     const row = ev.target.closest("[data-goto]");
@@ -150,38 +151,39 @@ function initDrawer(map) {
   });
 }
 
-/* Cât pop-up-ul e deschis, pagina din spate nu se mai mișcă. Altfel derulai
-   fundalul fără să vrei, iar la închidere pagina sărea în altă parte și
-   harta se remăsura degeaba. Ținem minte poziția și o punem înapoi. */
-function lockPage() {
-  if (drawer.lockedAt !== null && drawer.lockedAt !== undefined) return;
-  drawer.lockedAt = window.scrollY;
-  const b = document.body;
-  b.style.position = "fixed";
-  b.style.top = `-${drawer.lockedAt}px`;
-  b.style.left = "0";
-  b.style.right = "0";
-  b.style.width = "100%";
-}
+/* Pagina din spate nu trebuie să se miște cât e pop-up-ul deschis.
 
-function unlockPage() {
-  if (drawer.lockedAt === null || drawer.lockedAt === undefined) return;
-  const y = drawer.lockedAt;
-  drawer.lockedAt = null;
-  const b = document.body;
-  b.style.position = "";
-  b.style.top = "";
-  b.style.left = "";
-  b.style.right = "";
-  b.style.width = "";
-  window.scrollTo(0, y);
+   Nu o mai blocăm cu `position: fixed` pe body: aceea prăbușea înălțimea
+   documentului de la 4500 la 1278 px, ceea ce ducea derularea la zero, iar
+   la închidere trebuia pusă înapoi — dar `scroll-behavior: smooth` o punea
+   *animat*, deci vedeai pagina sărind sus și întorcându-se încet. Pe
+   telefon, relayout-ul întregii pagini cu peste o sută de imagini era și
+   scump, de acolo și reîncărcările.
+
+   Pop-up-ul e oricum fix peste ecran, deci e de ajuns să oprim derularea
+   chiar acolo unde se naște. Layout-ul rămâne neatins, nu mai e nimic de
+   salvat și de restaurat. */
+function bindScrollContainment(root) {
+  const scrollable = () => root.querySelector(".modal__body");
+
+  // în afara zonei care se derulează, gestul nu are ce să miște
+  const block = ev => {
+    const body = scrollable();
+    if (body && ev.target instanceof Node && body.contains(ev.target)) return;
+    ev.preventDefault();
+  };
+
+  root.addEventListener("wheel", block, { passive: false });
+  root.addEventListener("touchmove", block, { passive: false });
 }
 
 function closeDrawer() {
   if (!drawer.root || drawer.root.hidden) return;
   drawer.root.hidden = true;
-  unlockPage();
-  if (drawer.lastFocus && document.contains(drawer.lastFocus)) drawer.lastFocus.focus();
+  if (drawer.lastFocus && document.contains(drawer.lastFocus)) {
+    // fără preventScroll, focalizarea ar trage singură pagina spre element
+    drawer.lastFocus.focus({ preventScroll: true });
+  }
   drawer.lastFocus = null;
 }
 
@@ -281,7 +283,6 @@ function renderDrawer(sel) {
 
   if (drawer.root.hidden) drawer.lastFocus = document.activeElement;
   drawer.root.hidden = false;
-  lockPage();
   drawer.body.scrollTop = 0;
   $("#modal-close").focus({ preventScroll: true });
 
