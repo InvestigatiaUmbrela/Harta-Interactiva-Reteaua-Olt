@@ -425,6 +425,24 @@ function animate(map) {
    9. PORNIRE
    ============================================================ */
 function boot() {
+  /* Pagina se deschide de sus. Browserul își amintește altfel unde ai
+     rămas, iar pe telefon planșa crește pe măsură ce se încarcă cele 108
+     imagini — așa că poziția memorată te lasă undeva la mijloc. */
+  if ("scrollRestoration" in history) history.scrollRestoration = "manual";
+  if (!location.hash) {
+    window.scrollTo(0, 0);
+    requestAnimationFrame(() => window.scrollTo(0, 0));
+    window.addEventListener("load", () => {
+      if (!location.hash) window.scrollTo(0, 0);
+    }, { once: true });
+
+    /* Când revii în filă, telefonul o scoate din memoria de fundal cu tot
+       cu poziția veche. Asta e situația în care ajungi la mijlocul paginii. */
+    window.addEventListener("pageshow", ev => {
+      if (ev.persisted && !location.hash) window.scrollTo(0, 0);
+    });
+  }
+
   mountVideo();
   mountFigures();
   mountHeroWeb();

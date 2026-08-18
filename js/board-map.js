@@ -306,14 +306,14 @@ class BoardMap {
     const r = this.stage.getBoundingClientRect();
     const whole = Math.min(r.width / BOARD.width, r.height / BOARD.height);
 
-    this.minK = whole;              // mai departe de-atât n-are rost: se vede tot
+    /* Pornim puțin mai depărtat decât încadrarea exactă: planșa are aer
+       în jur și se vede dintr-o privire cât de întinsă e rețeaua.
+       Zoom-out-ul poate merge ceva mai departe, dar nu până se pierde. */
+    this.minK = whole * 0.72;
     this.maxK = Math.max(whole * 8, 1.6);
     this.baseK = whole;             // reper pentru zoom-ul amortizat al grilei
 
-    /* Pe ecran mic, planșa întreagă ar fi ilizibilă. Pornim de la un zoom
-       la care numele se citesc; restul se navighează cu degetul. */
-    const small = r.width < 620;
-    const k = small ? Math.max(whole, 0.3) : whole;
+    const k = whole * 0.86;
 
     this.view = this.clamp({ k, x: 0, y: 0 });
     this.target = { ...this.view };
