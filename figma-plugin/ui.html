@@ -1,0 +1,120 @@
+<style>
+  :root { color-scheme: dark; }
+  body {
+    margin: 0; padding: 16px;
+    font: 12px/1.5 "Inter", -apple-system, system-ui, sans-serif;
+    background: #171717; color: #fff;
+  }
+  h1 {
+    margin: 0 0 4px; font-size: 13px; letter-spacing: .04em;
+    text-transform: uppercase;
+  }
+  p { margin: 0 0 14px; color: #8c8c8c; }
+  b { color: #fff; font-weight: 600; }
+
+  .row { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; }
+  label { color: #8c8c8c; }
+  select {
+    background: #0b0b0b; color: #fff; border: 1px solid rgba(255,255,255,.16);
+    padding: 5px 8px; font: inherit;
+  }
+
+  button {
+    width: 100%; padding: 10px; font: inherit; font-weight: 600;
+    letter-spacing: .1em; text-transform: uppercase;
+    background: #990000; color: #fff; border: 0; cursor: pointer;
+  }
+  button:hover { background: #d81e05; }
+  button:disabled { background: #333; color: #777; cursor: default; }
+
+  .bar {
+    height: 3px; background: rgba(255,255,255,.12); margin: 14px 0 8px;
+    display: none;
+  }
+  .bar span { display: block; height: 100%; width: 0; background: #d81e05; }
+  .bar.on { display: block; }
+
+  .status { color: #8c8c8c; min-height: 18px; }
+  .status.err { color: #ff6a5a; }
+  .status.ok { color: #6ec98b; }
+
+  ol { margin: 14px 0 0; padding-left: 18px; color: #8c8c8c; }
+  li { margin-bottom: 4px; }
+</style>
+
+<h1>Export Harta Olt</h1>
+<p>Selectează cadrul hărții în Figma, apoi apasă Exportă. Iese un fișier <b>board.json</b> cu fiecare element și poziția lui exactă.</p>
+
+<div class="row">
+  <label for="scale">Rezoluție imagini</label>
+  <select id="scale">
+    <option value="2" selected>2× (recomandat)</option>
+    <option value="3">3× (mai mare)</option>
+    <option value="1">1×</option>
+  </select>
+</div>
+
+<button id="go">Exportă</button>
+
+<div class="bar" id="bar"><span id="fill"></span></div>
+<div class="status" id="status"></div>
+
+<ol>
+  <li>Salvează <b>board.json</b> în folderul site-ului.</li>
+  <li>Spune-i lui Claude că e gata.</li>
+</ol>
+
+<script>
+const $ = id => document.getElementById(id);
+
+$("go").onclick = () => {
+  $("go").disabled = true;
+  $("status").className = "status";
+  $("status").textContent = "Se citește board-ul…";
+  parent.postMessage({ pluginMessage: {
+    type: "export",
+    scale: Number($("scale").value)
+  } }, "*");
+};
+
+onmessage = event => {
+  const msg = event.data.pluginMessage;
+  if (!msg) return;
+
+  if (msg.type === "error") {
+    $("status").className = "status err";
+    $("status").textContent = msg.message;
+    $("go").disabled = false;
+    return;
+  }
+
+  if (msg.type === "start") {
+    $("bar").className = "bar on";
+    $("status").textContent = "Se exportă " + msg.total + " elemente…";
+  }
+
+  if (msg.type === "progress") {
+    $("fill").style.width = Math.round(msg.done / msg.total * 100) + "%";
+    $("status").textContent = "Se exportă " + msg.done + " din " + msg.total + "…";
+  }
+
+  if (msg.type === "done") {
+    $("fill").style.width = "100%";
+
+    const blob = new Blob([JSON.stringify(msg.payload)], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "board.json";
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 4000);
+
+    const mb = (blob.size / 1048576).toFixed(1);
+    $("status").className = "status ok";
+    $("status").textContent = "Gata — " + msg.payload.elements.length + " elemente, " + mb + " MB.";
+    $("go").disabled = false;
+  }
+};
+</script>
