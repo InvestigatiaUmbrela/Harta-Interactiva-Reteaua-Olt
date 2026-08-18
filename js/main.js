@@ -172,7 +172,7 @@ function renderDrawer(sel) {
     /* apartenențele, așa cum apar pe planșă: sigla PSD lângă om,
        stema SRI la cei veniți pe filiera serviciilor */
     const affil = (n.affil || []).length
-      ? `<h4 class="drawer__h">Apartenențe</h4>
+      ? `<h4 class="drawer__h">Afiliere</h4>
          <div class="affils">${n.affil
            .map(a => `<span class="affil affil--${a.toLowerCase()}">${a}</span>`).join("")}</div>`
       : "";
@@ -255,29 +255,6 @@ function renderDrawer(sel) {
       { opacity: 1, y: 0, duration: 0.4, stagger: 0.045, delay: 0.1,
         ease: "power2.out", overwrite: true });
   }
-}
-
-/* ============================================================
-   6. CĂUTARE
-   ============================================================ */
-function mountSearch(map) {
-  const input = $("#map-search");
-  if (!input) return;
-
-  const find = q => {
-    const s = q.trim().toLowerCase();
-    if (!s) return null;
-    return NODES.find(n => n.label.join(" ").toLowerCase().includes(s))
-        || NODES.find(n => (n.role + " " + n.lead).toLowerCase().includes(s));
-  };
-
-  input.addEventListener("keydown", ev => {
-    if (ev.key !== "Enter") return;
-    const hit = find(input.value);
-    if (!hit) return;
-    map.select({ type: "node", id: hit.id });
-    map.focus(hit.id, 1.9);
-  });
 }
 
 /* ============================================================
@@ -425,11 +402,6 @@ function animate(map) {
       }
     });
 
-    /* --- harta originală, ușor paralax --- */
-    gsap.to("#origin-img", {
-      yPercent: -6, ease: "none",
-      scrollTrigger: { trigger: "#origin-img", start: "top bottom", end: "bottom top", scrub: 0.6 }
-    });
   });
 
   /* --- bara de sus apare după ce hero-ul iese din cadru --- */
@@ -454,7 +426,6 @@ function boot() {
 
   initDrawer(map);
   mountFilters(map);
-  mountSearch(map);
 
   mountTimeline(id => {
     document.getElementById("harta").scrollIntoView({ behavior: prefersReduced() ? "auto" : "smooth" });

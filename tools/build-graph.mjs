@@ -32,26 +32,28 @@ const norm = s => (s || "").normalize("NFD")
 const MEMBERS = {
   stanescu:      { img: ["Stanesk", "PSD WHITE 9"], txt: ["Paul STĂNESCU"] },
   delta:         { txt: ["“Stuful din Delta Dunării”"] },
-  busi:          { img: ["Busi 2", "PSD WHITE 8"],
-                   txt: ["Florin ‘Busi’ Barbu", "ANIF Min. Agriculturii"] },
+  busi:          { img: ["Busi 2", "PSD WHITE 8"], txt: ["Florin ‘Busi’ Barbu"],
+                   sec: { kind: "office", txt: ["ANIF Min. Agriculturii"] } },
   carmin:        { img: ["CARMIN WHITE 2"], txt: [["Companie PRIVATĂ", 3580, 296]] },
   mariana:       { img: ["Mariana"], txt: ["Mariana MOȚ"] },
   sri:           { img: ["SRI WHITE 4"] },
   spital:        { txt: ["Spitalul JUDEȚEAN Slatina"] },
-  oprescu:       { img: ["Opresk", "PSD WHITE 5"],
-                   txt: ["Marius OPRESCU", "Președinte CJ OLT"] },
+  oprescu:       { img: ["Opresk", "PSD WHITE 5"], txt: ["Marius OPRESCU"],
+                   sec: { kind: "office", txt: ["Președinte CJ OLT"] } },
   coldea:        { img: ["Coldea"], txt: ["Florian COLDEA"] },
   pandarof:      { img: ["Pandarof"], txt: ["Marina PANDAROF"] },
-  emilmot:       { img: ["Mot", "PSD WHITE 7"],
-                   txt: ["Emil MOȚ", "Primar SLATINA"] },
+  emilmot:       { img: ["Mot", "PSD WHITE 7"], txt: ["Emil MOȚ"],
+                   sec: { kind: "office", txt: ["Primar SLATINA"] } },
   /* primarul și funcția lui sunt o singură entitate: pe planșă sunt
      lipite oricum, iar săgețile duc când la una, când la cealaltă */
-  rada:          { img: ["Nicusor Rada 2", "PSD WHITE 10"],
-                   txt: ["Nicușor RADA", "Primar PIATRA-OLT"] },
-  postolache:    { img: ["Postolache 2", "MineralportWhite 2"],
-                   txt: ["Claudiu POSTOLACHE", ["Companie PRIVATĂ", 1899, 1245]] },
-  titiriga:      { img: ["Titiriga", "Wagramer 2"],
-                   txt: ["VALERIU ȚIȚIRIGĂ", ["Companie PRIVATĂ", 2397, 1245]] },
+  rada:          { img: ["Nicusor Rada 2", "PSD WHITE 10"], txt: ["Nicușor RADA"],
+                   sec: { kind: "office", txt: ["Primar PIATRA-OLT"] } },
+  postolache:    { img: ["Postolache 2"], txt: ["Claudiu POSTOLACHE"],
+                   sec: { kind: "company-private", img: ["MineralportWhite 2"],
+                          txt: [["Companie PRIVATĂ", 1899, 1245]] } },
+  titiriga:      { img: ["Titiriga"], txt: ["VALERIU ȚIȚIRIGĂ"],
+                   sec: { kind: "company-private", img: ["Wagramer 2"],
+                          txt: [["Companie PRIVATĂ", 2397, 1245]] } },
   covaciu:       { img: ["Covaciu", "SRI WHITE 6"], txt: ["Vasile COVACIU", ["Director", 846, 1293], ["C.A.O.", 835, 1349]] },
   usurelu:       { img: ["Usurelu", "PSD WHITE 11"], txt: ["Cătălin UȘURELU", ["Director", 374, 1290], ["C.A.O.", 365, 1346]] },
   oltdrum:       { img: ["Olt Drum SA WHITE 2"], txt: [["Companie de STAT", 1390, 1384]] },
@@ -59,10 +61,12 @@ const MEMBERS = {
   adrianbarbu:   { img: ["Adrian Barbu - Panadria 2"], txt: ["Adrian BARBU"] },
   sga:           { txt: ["S.G.A. OLT", ["Director", 2094, 1850]] },
   panadria:      { txt: ["PANADRIA", ["Companie PRIVATĂ", 1704, 1850]] },
-  pisicu:        { img: ["Pisicu 2"],
-                   txt: ["Mircea ‘Pisicu’ Ungureanu", "OLD&NEW CONSTRUCT", ["Companie PRIVATĂ", 1110, 1850]] },
-  sorin:         { img: ["Paduraru 2"],
-                   txt: ["Sorin PĂDURARU", "Condor PĂDURARU", ["Companie PRIVATĂ", 2623, 1850]] }
+  pisicu:        { img: ["Pisicu 2"], txt: ["Mircea ‘Pisicu’ Ungureanu"],
+                   sec: { kind: "company-private",
+                          txt: ["OLD&NEW CONSTRUCT", ["Companie PRIVATĂ", 1110, 1850]] } },
+  sorin:         { img: ["Paduraru 2"], txt: ["Sorin PĂDURARU"],
+                   sec: { kind: "company-private",
+                          txt: ["Condor PĂDURARU", ["Companie PRIVATĂ", 2623, 1850]] } }
 };
 
 const DECOR = ["Peace sign 1"];
@@ -71,13 +75,14 @@ const claimed = new Set();
 const entities = [];
 const warn = [];
 
-for (const [id, def] of Object.entries(MEMBERS)) {
-  const idx = [];
-
+/* Strânge elementele unei fațete: portretul omului separat de sigla firmei,
+   ca filtrul „Companie privată” să aprindă doar firma, nu și persoana.
+   La click se aprinde tot, fiindcă entitatea rămâne una singură. */
+function pick(id, def, into) {
   for (const name of def.img || []) {
     const i = els.findIndex((e, k) => !claimed.has(k) && e.name === name);
     if (i === -1) { warn.push(`${id}: nu găsesc imaginea "${name}"`); continue; }
-    idx.push(i); claimed.add(i);
+    into.push(i); claimed.add(i);
   }
 
   for (const spec of def.txt || []) {
@@ -86,13 +91,29 @@ for (const [id, def] of Object.entries(MEMBERS)) {
     const hits = els.map((e, k) => ({ e, k }))
       .filter(({ e, k }) => !claimed.has(k) && e.text && norm(e.text).startsWith(target));
     if (!hits.length) { warn.push(`${id}: nu găsesc textul "${want}"`); continue; }
-    let pick = hits[0];
+    let best = hits[0];
     if (nx !== null) {
-      pick = hits.reduce((best, h) =>
-        Math.hypot(h.e.x - nx, h.e.y - ny) < Math.hypot(best.e.x - nx, best.e.y - ny) ? h : best);
+      best = hits.reduce((b, h) =>
+        Math.hypot(h.e.x - nx, h.e.y - ny) < Math.hypot(b.e.x - nx, b.e.y - ny) ? h : b);
     }
-    idx.push(pick.k); claimed.add(pick.k);
+    into.push(best.k); claimed.add(best.k);
   }
+}
+
+const NODE_KIND = {};
+NODES.forEach(n => { NODE_KIND[n.id] = n.kind; });
+
+for (const [id, def] of Object.entries(MEMBERS)) {
+  const main = [];
+  pick(id, def, main);
+
+  const secEls = [];
+  if (def.sec) pick(id, def.sec, secEls);
+
+  const idx = [...main, ...secEls];
+  const facets = {};
+  if (main.length) facets[NODE_KIND[id] || "person"] = main;
+  if (secEls.length) facets[def.sec.kind] = (facets[def.sec.kind] || []).concat(secEls);
 
   if (!idx.length) { warn.push(`${id}: NICIUN element`); continue; }
 
@@ -105,7 +126,7 @@ for (const [id, def] of Object.entries(MEMBERS)) {
   }, { x0: 1e9, y0: 1e9, x1: -1e9, y1: -1e9 });
 
   entities.push({
-    id, els: idx,
+    id, els: idx, facets,
     x: +box.x0.toFixed(1), y: +box.y0.toFixed(1),
     w: +(box.x1 - box.x0).toFixed(1), h: +(box.y1 - box.y0).toFixed(1)
   });

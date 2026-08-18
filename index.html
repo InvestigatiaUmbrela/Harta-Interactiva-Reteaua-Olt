@@ -15,7 +15,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Big+Shoulders+Display:wght@400;700;800&family=Barlow+Semi+Condensed:ital,wght@0,400;0,500;0,600;1,400;1,500&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/style.css?v=289a2187">
+<link rel="stylesheet" href="css/style.css?v=831a6054">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' fill='%23171717'/><path d='M6 22h20M16 22V8M16 8h10' stroke='%23fff' stroke-width='2' fill='none'/><circle cx='16' cy='22' r='3' fill='%23990000'/></svg>">
 </head>
 
@@ -30,7 +30,6 @@
     <a href="#harta">Harta</a>
     <a href="#cronologie">Cronologie</a>
     <a href="#cifre">Cifrele</a>
-    <a href="#sursa">Sursa</a>
   </nav>
 </header>
 
@@ -112,8 +111,6 @@
 
     <div class="map">
       <div class="map__toolbar">
-        <input class="map__search" id="map-search" type="search"
-               placeholder="Caută un nume…" aria-label="Caută în hartă și apasă Enter">
         <div id="map-filters" class="map__filters" style="display:flex;flex-wrap:wrap;gap:0.4rem"></div>
         <div class="map__zoom">
           <button class="chip" id="zoom-out" aria-label="Depărtează">−</button>
@@ -156,24 +153,6 @@
       <div class="section__rule"></div>
     </div>
     <div class="figures" id="figures"></div>
-  </div>
-</section>
-
-<!-- ============ HARTA ORIGINALĂ ============ -->
-<section class="section" id="sursa">
-  <div class="shell">
-    <div class="section__head">
-      <span class="section__num">05 — Planșa originală</span>
-      <h2 class="section__title">Harta așa cum<br>a fost desenată</h2>
-      <div class="section__rule"></div>
-      <p class="section__sub">
-        Versiunea de pe board, din care a fost construită harta interactivă de mai sus.
-      </p>
-    </div>
-    <div class="origin__frame">
-      <img id="origin-img" src="assets/harta-originala.png" loading="lazy"
-           alt="Planșa completă a rețelei din județul Olt, cu toate persoanele, instituțiile, firmele și săgețile dintre ele.">
-    </div>
   </div>
 </section>
 
@@ -220,8 +199,8 @@
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrollTrigger.min.js"></script>
 <script src="js/data.js?v=2dade3af"></script>
 <script src="js/board.js?v=d3552c3a"></script>
-<script src="js/graph.js?v=9e62e6ea"></script>
-<script src="js/board-map.js?v=97691aa6"></script>
-<script src="js/main.js?v=95f48fc6"></script>
+<script src="js/graph.js?v=e39fae33"></script>
+<script src="js/board-map.js?v=318297a7"></script>
+<script src="js/main.js?v=0de574fb"></script>
 </body>
 </html>

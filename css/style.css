@@ -293,7 +293,7 @@ button { font: inherit; color: inherit; cursor: pointer; }
 
 .map__stage {
   position: relative;
-  background: var(--board);
+  background: #000;
   border: var(--rule) solid var(--hair);
   height: clamp(460px, 76vh, 880px);
   overflow: hidden;
@@ -303,6 +303,20 @@ button { font: inherit; color: inherit; cursor: pointer; }
 .map__stage.is-panning { cursor: grabbing; }
 .map__stage.is-dimmed .layer-edges,
 .map__stage.is-dimmed .layer-nodes { --idle-opacity: 0.12; }
+
+/* grila din spatele plansei, mișcată la o cincime din viteză */
+.map__grid {
+  position: absolute; inset: -50%;
+  pointer-events: none;
+  background-image:
+    linear-gradient(to right,  rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+    linear-gradient(to right,  rgba(255, 255, 255, 0.10) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.10) 1px, transparent 1px);
+  background-position: 0 0, 0 0, 0 0, 0 0;
+  mask-image: radial-gradient(ellipse at center, #000 45%, transparent 92%);
+  -webkit-mask-image: radial-gradient(ellipse at center, #000 45%, transparent 92%);
+}
 
 /* ---------- plansa exportată din Figma ---------- */
 .board {

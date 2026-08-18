@@ -16,6 +16,12 @@ class BoardMap {
     this.selected = null;
     this.filters = new Set();
 
+    /* Grila din spate se mișcă și se apropie la o cincime din viteza
+       plansei — destul cât să dea adâncime, prea puțin cât să distragă. */
+    this.grid = document.createElement("div");
+    this.grid.className = "map__grid";
+    this.stage.prepend(this.grid);
+
     this.board = document.createElement("div");
     this.board.className = "board";
     this.board.style.width = BOARD.width + "px";
@@ -58,6 +64,7 @@ class BoardMap {
 
       if (GRAPH.decor.includes(i)) img.classList.add("sprite--decor");
 
+      img.dataset.el = String(i);
       const ent = this.entOf.get(i);
       if (ent) img.dataset.ent = ent;
       const rel = this.relOf.get(i);
@@ -181,6 +188,7 @@ class BoardMap {
     this.board.classList.toggle("is-dimmed", on);
 
     const ents = new Set(), rels = new Set();
+    const onlyEls = new Set();   // când filtrăm, doar aceste elemente se aprind
 
     if (sel && sel.type === "node") {
       ents.add(sel.id);
@@ -193,11 +201,16 @@ class BoardMap {
       const r = GRAPH.relations[sel.index];
       rels.add(sel.index); ents.add(r.from); ents.add(r.to);
     } else if (this.filters.size) {
+      /* La filtrare aprindem doar fațeta cerută: firma fără persoana ei.
+         La selecție se aprinde entitatea întreagă — vezi mai jos. */
       GRAPH.entities.forEach(en => {
-        const n = NODE_BY_ID[en.id];
-        if (!n) return;
-        const is = [n.kind, ...(n.also || [])];
-        if (is.some(k => this.filters.has(k))) ents.add(en.id);
+        for (const k of this.filters) {
+          const part = en.facets && en.facets[k];
+          if (part && part.length) {
+            ents.add(en.id);
+            part.forEach(i => onlyEls.add(i));
+          }
+        }
       });
       GRAPH.relations.forEach((r, i) => {
         if (ents.has(r.from) && ents.has(r.to)) rels.add(i);
@@ -205,7 +218,11 @@ class BoardMap {
     }
 
     this.board.querySelectorAll("[data-ent]").forEach(el => {
-      const active = ents.has(el.dataset.ent);
+      let active = ents.has(el.dataset.ent);
+      // la filtrare, sprite-urile din afara fațetei cerute rămân stinse
+      if (active && onlyEls.size && el.dataset.el !== undefined) {
+        active = onlyEls.has(Number(el.dataset.el));
+      }
       el.classList.toggle("is-active", active);
       el.classList.toggle("is-selected",
         !!sel && sel.type === "node" && sel.id === el.dataset.ent);
@@ -229,6 +246,18 @@ class BoardMap {
   apply() {
     const { x, y, k } = this.view;
     this.board.style.transform = `translate(${x}px, ${y}px) scale(${k})`;
+
+    if (this.grid) {
+      const P = 0.2;                                   // o cincime din viteză
+      const base = this.baseK || k;
+      const gk = 1 + (k / base - 1) * P;               // zoom amortizat
+      const cell = 46 * gk;
+      this.grid.style.backgroundSize =
+        `${cell}px ${cell}px, ${cell}px ${cell}px, ${cell * 5}px ${cell * 5}px, ${cell * 5}px ${cell * 5}px`;
+      const gx = x * P, gy = y * P;
+      this.grid.style.backgroundPosition =
+        `${gx}px ${gy}px, ${gx}px ${gy}px, ${gx}px ${gy}px, ${gx}px ${gy}px`;
+    }
   }
 
   clampView() {
@@ -249,6 +278,7 @@ class BoardMap {
     const r = this.stage.getBoundingClientRect();
     const whole = Math.min(r.width / BOARD.width, r.height / BOARD.height);
     this.minK = whole * 0.9;
+    this.baseK = whole;      // reper pentru zoom-ul amortizat al grilei
 
     /* Pe ecran mic, plansa întreagă ar fi ilizibilă. Pornim de la un zoom
        la care numele se citesc, ancorat în colțul de sus-stânga, de unde
