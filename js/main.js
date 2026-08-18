@@ -78,21 +78,19 @@ function mountFilters(map) {
   const kinds = Object.keys(KIND_META).filter(k =>
     NODES.some(n => n.kind === k || (n.also || []).includes(k)));
 
-  /* afilierile sunt taguri la fel ca tipurile: apasă PSD și vezi unde
-     stă sigla pe planșă */
-  const affils = Object.keys(AFFIL_META).filter(a =>
-    NODES.some(n => (n.affil || []).includes(a)));
+  /* afilierea e un singur tag, lângă tipuri: aprinde toate siglele
+     de partid și de serviciu de pe planșă */
+  const hasAffil = NODES.some(n => (n.affil || []).length);
 
   wrap.innerHTML =
     kinds.map(k => `
       <button class="chip chip--${k}" data-kind="${k}" aria-pressed="false">
         <span class="chip__dot" aria-hidden="true"></span>${KIND_META[k].label}
       </button>`).join("") +
-    `<span class="chip-sep" aria-hidden="true"></span>` +
-    affils.map(a => `
-      <button class="chip chip--affil chip--${a.toLowerCase()}" data-kind="${a}" aria-pressed="false">
-        <span class="chip__dot" aria-hidden="true"></span>${AFFIL_META[a].label}
-      </button>`).join("");
+    (hasAffil ? `
+      <button class="chip chip--affil" data-kind="${AFFIL_TAG.key}" aria-pressed="false">
+        <span class="chip__dot" aria-hidden="true"></span>${AFFIL_TAG.label}
+      </button>` : "");
 
   const active = new Set();
   wrap.addEventListener("click", ev => {

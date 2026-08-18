@@ -440,9 +440,12 @@ const EDGES = [
 
   { from: "cao", to: "sorin", label: "acordă proiecte lui", route: "vhv", mid: 972,
     detail: "CAO mai atribuie lucrări către încă doi jucători cruciali: Condor Păduraru și firma-fanion a lui Oprescu, Wagramer Termo 2000.", src: "harta" },
-
-
-
+
+
+
+
+
+
 
   { from: "titiriga", to: "sorin", label: "fostul șofer al tatălui lui", route: "hvh", mid: 1256,
     detail: "Legătura care arată cât de scurtă e distanța dintre firmele care par independente: administratorul Wagramer a fost șofer la compania Condor Păduraru.", src: "harta" }
@@ -488,11 +491,9 @@ const FIGURES = [
     note: "achitat de constructorul de casă către președintele CJ" }
 ];
 
-/* afilierile stau în bara de filtre, lângă tipuri */
-const AFFIL_META = {
-  "PSD": { label: "PSD" },
-  "SRI": { label: "SRI" }
-};
+/* Un singur tag pentru afiliere, alături de tipuri. Aprinde toate
+   siglele de partid și de serviciu de pe planșă. */
+const AFFIL_TAG = { key: "AFILIERE", label: "Afiliere", facets: ["PSD", "SRI"] };
 
 const KIND_META = {
   "person":          { label: "Persoană",           short: "PERS" },

@@ -205,8 +205,15 @@ class BoardMap {
     } else if (this.filters.size) {
       /* La filtrare aprindem doar fațeta cerută: firma fără persoana ei.
          La selecție se aprinde entitatea întreagă — vezi mai jos. */
+      /* „Afiliere” e un tag umbrelă: acoperă siglele PSD și SRI deodată. */
+      const wanted = [];
+      for (const k of this.filters) {
+        if (k === AFFIL_TAG.key) wanted.push(...AFFIL_TAG.facets);
+        else wanted.push(k);
+      }
+
       GRAPH.entities.forEach(en => {
-        for (const k of this.filters) {
+        for (const k of wanted) {
           const part = en.facets && en.facets[k];
           if (part && part.length) {
             ents.add(en.id);

@@ -285,14 +285,8 @@ button { font: inherit; color: inherit; cursor: pointer; }
 .chip--office   .chip__dot { background: var(--bone); }
 .chip--company-state   .chip__dot { background: #6f9bd1; }
 .chip--company-private .chip__dot { background: var(--blood); }
-/* afilierile: aceleași sigle de pe planșă, ca taguri */
-.chip-sep {
-  width: var(--rule); align-self: stretch; margin: 0 0.35rem;
-  background: var(--hair);
-}
-.chip--affil { font-family: var(--font-plate); letter-spacing: 0.06em; }
-.chip--psd .chip__dot { background: var(--bone); }
-.chip--sri .chip__dot { background: var(--blood-hot); }
+/* tagul de afiliere: aceleași sigle de pe planșă, sub un singur nume */
+.chip--affil .chip__dot { background: var(--blood-hot); }
 
 .map__zoom { margin-left: auto; display: flex; gap: 0.35rem; }
 .map__zoom .chip { min-width: 40px; justify-content: center; }
