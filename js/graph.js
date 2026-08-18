@@ -156,26 +156,17 @@ const GRAPH = {
    "h": 300.9
   },
   {
-   "id": "primarpiatra",
-   "els": [
-    44
-   ],
-   "x": 2137.2,
-   "y": 804.4,
-   "w": 269.9,
-   "h": 94.2
-  },
-  {
    "id": "rada",
    "els": [
     55,
     58,
-    73
+    73,
+    44
    ],
-   "x": 2147,
-   "y": 899,
-   "w": 352,
-   "h": 288.9
+   "x": 2137.2,
+   "y": 804.4,
+   "w": 361.8,
+   "h": 383.6
   },
   {
    "id": "mineralport",
@@ -535,7 +526,7 @@ const GRAPH = {
   {
    "el": 47,
    "from": "oprescu",
-   "to": "primarpiatra",
+   "to": "rada",
    "labelEl": 46,
    "label": "este Cumnatul lui",
    "labelEls": [
@@ -563,7 +554,7 @@ const GRAPH = {
   {
    "el": 50,
    "from": "oprescu",
-   "to": "primarpiatra",
+   "to": "rada",
    "labelEl": 52,
    "label": "alocă fonduri suplimentare primăriei lui",
    "labelEls": [

@@ -44,8 +44,10 @@ const MEMBERS = {
   pandarof:      { img: ["Pandarof"], txt: ["Marina PANDAROF"] },
   primarslatina: { txt: ["Primar SLATINA"] },
   emilmot:       { img: ["Mot", "PSD WHITE 7"], txt: ["Emil MOȚ"] },
-  primarpiatra:  { txt: ["Primar PIATRA-OLT"] },
-  rada:          { img: ["Nicusor Rada 2", "PSD WHITE 10"], txt: ["Nicușor RADA"] },
+  /* primarul și funcția lui sunt o singură entitate: pe planșă sunt
+     lipite oricum, iar săgețile duc când la una, când la cealaltă */
+  rada:          { img: ["Nicusor Rada 2", "PSD WHITE 10"],
+                   txt: ["Nicușor RADA", "Primar PIATRA-OLT"] },
   mineralport:   { img: ["MineralportWhite 2"], txt: [["Companie PRIVATĂ", 1899, 1245]] },
   wagramer:      { img: ["Wagramer 2"], txt: [["Companie PRIVATĂ", 2397, 1245]] },
   postolache:    { img: ["Postolache 2"], txt: ["Claudiu POSTOLACHE"] },

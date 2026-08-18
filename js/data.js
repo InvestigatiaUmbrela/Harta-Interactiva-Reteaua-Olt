@@ -91,27 +91,17 @@ const NODES = [
     ],
     src: "harta"
   },
-  {
-    id: "primarpiatra", kind: "office", x: 900, y: 340,
-    label: ["Primar", "PIATRA-OLT"],
-    role: "Primăria care semnează autorizațiile.",
-    lead: "Primăria din Piatra-Olt emite autorizațiile de construire pentru balastierele de pe Lunca Oltului — cheia întregii exploatări de agregate minerale.",
-    facts: [
-      "Ocupată de Nicușor Rada, cumnatul lui Marius Oprescu.",
-      "Autorizații emise pentru balastiere pe terenuri agricole, fără scoatere din circuitul agricol.",
-      "În schimb, Consiliul Județean alocă fonduri suplimentare acestei primării."
-    ],
-    src: "harta"
-  },
+
   {
     id: "rada", kind: "person", x: 890, y: 450,
     label: ["Nicușor", "RADA"], eyebrow: "PSD",
     role: "Primarul din Piatra-Olt. Cumnatul lui Oprescu.",
-    lead: "Semnătura lui deschide balastierele. Documentarul îl descrie ca fiind ținut în funcție prin fonduri alocate de cumnatul său de la Consiliul Județean.",
+    lead: "Semnătura lui deschide balastierele de pe Lunca Oltului — cheia întregii exploatări de agregate minerale. Documentarul îl descrie ca fiind ținut în funcție prin fonduri alocate de cumnatul său de la Consiliul Județean.",
     facts: [
       "Emite autorizații de construire pentru balastiere pe terenuri agricole, fără scoatere din circuitul agricol.",
       "ANRM dă permise doar pe unele tarlale, dar excavatoarele intră și în perimetre neautorizate.",
-      "Rezultatul, spune documentarul: dezastru ecologic pe Lunca Oltului."
+      "Rezultatul, spune documentarul: dezastru ecologic pe Lunca Oltului.",
+      "În schimb, Consiliul Județean alocă fonduri suplimentare primăriei pe care o conduce."
     ],
     src: "harta"
   },
@@ -433,10 +423,10 @@ const EDGES = [
   { from: "oprescu", to: "primarslatina", label: "este Nașul lui", route: "hvh", mid: 400,
     detail: "Cumetria devine politică: nașul conduce Consiliul Județean, finul conduce Primăria Slatina. Alianța locală închide cercul.", src: "harta" },
 
-  { from: "oprescu", to: "primarpiatra", label: "este Cumnatul lui", route: "hvh", mid: 700,
+  { from: "oprescu", to: "rada", label: "este Cumnatul lui", route: "hvh", mid: 700,
     detail: "Nicușor Rada, primarul din Piatra-Olt, este cumnatul lui Marius Oprescu. Semnătura lui deschide balastierele de pe Lunca Oltului.", src: "harta" },
 
-  { from: "oprescu", to: "primarpiatra", label: "alocă fonduri suplimentare primăriei lui", route: "hvh", mid: 700, offset: 24,
+  { from: "oprescu", to: "rada", label: "alocă fonduri suplimentare primăriei lui", route: "hvh", mid: 700, offset: 24,
     detail: "La schimb pentru autorizațiile de construire, Oprescu alocă fonduri suplimentare primăriei cumnatului său, pentru a-l ține în funcție.", src: "harta" },
 
   { from: "rada", to: "mineralport", label: "emite ilegal autorizații pentru", route: "vhv", mid: 495,
@@ -535,8 +525,6 @@ const EDGES = [
   { from: "emilmot", to: "primarslatina", label: "deține funcția de", route: "line",
     detail: "Emil Moț conduce Primăria Slatina, în timp ce nașul său preia Consiliul Județean. Pierde municipiul în vara lui 2024.", src: "documentar" },
 
-  { from: "rada", to: "primarpiatra", label: "deține funcția de", route: "line",
-    detail: "Nicușor Rada este primarul din Piatra-Olt și cumnatul lui Marius Oprescu.", src: "documentar" },
 
   { from: "busi", to: "anif", label: "a condus", route: "line",
     detail: "Florin „Busi” Barbu conduce ANIF înainte de a promova ca ministru al Agriculturii — instituția care virează peste 500 de milioane de lei către Wagramer.", src: "documentar" },
