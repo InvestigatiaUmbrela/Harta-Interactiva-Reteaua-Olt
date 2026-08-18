@@ -41,8 +41,8 @@ function mountTimeline(onTag) {
       <h3 class="tl-title">${item.title}</h3>
       <p class="tl-body">${item.body}</p>
       <div class="tl-tags">
-        ${item.nodes.map(id => byId[id]
-          ? `<button class="tl-tag" data-node="${id}">${byId[id].label.join(" ")}</button>`
+        ${item.nodes.map(id => NODE_BY_ID[id]
+          ? `<button class="tl-tag" data-node="${id}">${NODE_BY_ID[id].label.join(" ")}</button>`
           : "").join("")}
       </div>
     </article>`).join("");
@@ -119,7 +119,7 @@ function initDrawer(map) {
     const [type, key] = row.dataset.goto.split(":");
     if (type === "node") {
       map.select({ type: "node", id: key });
-      map.focusNode(key, Math.max(map.view.k, 1.4));
+      map.focus(key, Math.max(map.view.k, 1.4));
     } else {
       map.select({ type: "edge", index: Number(key) });
     }
@@ -145,7 +145,7 @@ function closeDrawer() {
 
 function relationsOf(id) {
   const out = [];
-  EDGES.forEach((e, i) => {
+  GRAPH.relations.forEach((e, i) => {
     if (e.from === id) out.push({ dir: "→", rel: e.label, other: e.to, index: i });
     else if (e.to === id) out.push({ dir: "←", rel: e.label, other: e.from, index: i });
   });
@@ -156,7 +156,7 @@ function renderDrawer(sel) {
   if (!sel) { closeDrawer(); return; }
 
   if (sel.type === "node") {
-    const n = byId[sel.id];
+    const n = NODE_BY_ID[sel.id];
     const rels = relationsOf(n.id);
     drawer.kind.textContent = `${KIND_META[n.kind].label} · sursă: ${n.src}`;
     drawer.title.textContent = n.label.join(" ");
@@ -172,18 +172,26 @@ function renderDrawer(sel) {
             <span class="link-row__dir">${r.dir}</span>
             <span>
               <span class="link-row__rel">${r.rel}</span>
-              <span class="link-row__to">${byId[r.other].label.join(" ")}</span>
+              <span class="link-row__to">${NODE_BY_ID[r.other].label.join(" ")}</span>
             </span>
           </button>`).join("")}
       </div>`;
   } else {
-    const e = EDGES[sel.index];
-    const a = byId[e.from], b = byId[e.to];
-    drawer.kind.textContent = `Relație · sursă: ${e.src}`;
-    drawer.title.textContent = e.label;
+    const e = GRAPH.relations[sel.index];
+    const a = NODE_BY_ID[e.from], b = NODE_BY_ID[e.to];
+    drawer.kind.textContent = `Relație · sursă: ${e.src || "harta"}`;
+    drawer.title.textContent = e.label || "Legătură pe planșă";
     drawer.role.textContent = `${a.label.join(" ")}  →  ${b.label.join(" ")}`;
+
+    /* unele săgeți sunt desenate pe planșă fără să fie explicate separat
+       în documentar — le arătăm ca atare, fără să inventăm o afirmație */
+    const lead = e.detail
+      ? `<p class="drawer__lead">${e.detail}</p>`
+      : `<p class="drawer__lead">Legătura e desenată pe planșă. Documentarul
+           nu detaliază separat această relație, dincolo de ce scrie săgeata.</p>`;
+
     drawer.body.innerHTML = `
-      <p class="drawer__lead">${e.detail}</p>
+      ${lead}
       <h4 class="drawer__h">Capetele relației</h4>
       <div class="links">
         <button class="link-row" data-goto="node:${a.id}">
@@ -206,7 +214,7 @@ function renderDrawer(sel) {
   }
 
   // portretul din board apare și în pop-up
-  const face = sel.type === "node" ? byId[sel.id] : byId[EDGES[sel.index].from];
+  const face = sel.type === "node" ? NODE_BY_ID[sel.id] : NODE_BY_ID[GRAPH.relations[sel.index].from];
   if (face && face.img) {
     drawer.img.src = `assets/fig/${face.img}.png`;
     drawer.img.alt = face.label.join(" ");
@@ -251,7 +259,7 @@ function mountSearch(map) {
     const hit = find(input.value);
     if (!hit) return;
     map.select({ type: "node", id: hit.id });
-    map.focusNode(hit.id, 1.9);
+    map.focus(hit.id, 1.9);
   });
 }
 
@@ -261,14 +269,14 @@ function mountSearch(map) {
 function mountHeroWeb() {
   const svg = $("#hero-web");
   if (!svg) return;
-  svg.setAttribute("viewBox", `0 0 ${VIEW.w} ${VIEW.h}`);
+  svg.setAttribute("viewBox", "0 0 1600 980");
   svg.setAttribute("preserveAspectRatio", "xMidYMid slice");
 
   const ns = "http://www.w3.org/2000/svg";
   const frag = document.createDocumentFragment();
 
   EDGES.forEach(e => {
-    const a = byId[e.from], b = byId[e.to];
+    const a = NODE_BY_ID[e.from], b = NODE_BY_ID[e.to];
     if (!a || !b) return;
     const mid = e.route === "vhv" ? { x: a.x, y: e.mid !== undefined ? e.mid : (a.y + b.y) / 2 }
               : e.route === "hvh" ? { x: e.mid !== undefined ? e.mid : (a.x + b.x) / 2, y: a.y }
@@ -390,19 +398,14 @@ function animate(map) {
     ScrollTrigger.create({
       trigger: "#harta", start: "top 65%", once: true,
       onEnter: () => {
-        const lines = map.edgeEls.map(e => e.line);
-        gsap.set(lines, { strokeDashoffset: (i) => map.edgeEls[i].length });
-        gsap.to(lines, {
-          strokeDashoffset: 0, duration: 1.1, ease: "power2.inOut",
-          stagger: { each: 0.018, from: "start" }
+        // săgețile se trag, apoi apar numele și portretele
+        gsap.from(".wire", {
+          opacity: 0, duration: 0.5, ease: "power2.out",
+          stagger: { each: 0.02, from: "start" }
         });
-        gsap.from(".layer-edges .edge__dot, .layer-edges .arrow-head", {
-          opacity: 0, duration: 0.4, stagger: 0.012, delay: 0.5
-        });
-        gsap.from(".layer-nodes .node", {
-          opacity: 0, scale: 0.9, transformOrigin: "center",
-          duration: 0.5, ease: "back.out(1.4)",
-          stagger: { each: 0.022, from: "center" }
+        gsap.from(".sprite:not(.sprite--decor)", {
+          opacity: 0, duration: 0.5, ease: "power2.out",
+          stagger: { each: 0.012, from: "random" }, delay: 0.15
         });
       }
     });
@@ -431,7 +434,7 @@ function boot() {
   mountHeroWeb();
 
   const mapRoot = $("#harta .map");
-  const map = new NetworkMap(mapRoot);
+  const map = new BoardMap(mapRoot);
   map.bind(renderDrawer);
 
   initDrawer(map);
@@ -441,7 +444,7 @@ function boot() {
   mountTimeline(id => {
     document.getElementById("harta").scrollIntoView({ behavior: prefersReduced() ? "auto" : "smooth" });
     map.select({ type: "node", id });
-    map.focusNode(id, 1.7);
+    map.focus(id, 1.7);
   });
 
   $("#zoom-in").addEventListener("click", () => map.zoomBy(1.25));

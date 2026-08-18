@@ -1,0 +1,17 @@
+<svg width="389" height="104" viewBox="0 0 389 104" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g filter="url(#filter0_d_56_135)">
+<text fill="white" style="white-space: pre" xml:space="preserve" font-family="Epilogue" font-size="48" font-weight="bold" letter-spacing="0em"><tspan x="139.908" y="35.268">ANIF&#10;</tspan><tspan x="0.759766" y="84.268">Min. Agriculturii</tspan></text>
+</g>
+<defs>
+<filter id="filter0_d_56_135" x="0" y="0" width="388.446" height="103.464" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+<feFlood flood-opacity="0" result="BackgroundImageFix"/>
+<feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
+<feOffset dy="4"/>
+<feGaussianBlur stdDeviation="2"/>
+<feComposite in2="hardAlpha" operator="out"/>
+<feColorMatrix type="matrix" values="0 0 0 0 0.6 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0"/>
+<feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_56_135"/>
+<feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_56_135" result="shape"/>
+</filter>
+</defs>
+</svg>

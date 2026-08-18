@@ -1,0 +1,17 @@
+<svg width="325" height="191" viewBox="0 0 325 191" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g filter="url(#filter0_d_56_21)">
+<text fill="white" style="white-space: pre" xml:space="preserve" font-family="Epilogue" font-size="64" font-weight="bold" letter-spacing="0em"><tspan x="40.3633" y="49.776">Spitalul&#10;</tspan><tspan x="2.17578" y="115.776">JUDE&#x21a;EAN&#x2028;</tspan><tspan x="50.1758" y="181.776">Slatina</tspan></text>
+</g>
+<defs>
+<filter id="filter0_d_56_21" x="0" y="0" width="324.687" height="190.784" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+<feFlood flood-opacity="0" result="BackgroundImageFix"/>
+<feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
+<feOffset dy="4"/>
+<feGaussianBlur stdDeviation="2"/>
+<feComposite in2="hardAlpha" operator="out"/>
+<feColorMatrix type="matrix" values="0 0 0 0 0.6 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0"/>
+<feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_56_21"/>
+<feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_56_21" result="shape"/>
+</filter>
+</defs>
+</svg>

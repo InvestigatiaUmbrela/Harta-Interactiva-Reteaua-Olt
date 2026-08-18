@@ -1,0 +1,17 @@
+<svg width="588" height="73" viewBox="0 0 588 73" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g filter="url(#filter0_d_56_35)">
+<text fill="white" style="white-space: pre" xml:space="preserve" font-family="Epilogue" font-size="64" font-weight="bold" letter-spacing="0em"><tspan x="0.0957031" y="49.776">Pre&#x219;edinte CJ OLT</tspan></text>
+</g>
+<defs>
+<filter id="filter0_d_56_35" x="0" y="0" width="587.453" height="72.576" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+<feFlood flood-opacity="0" result="BackgroundImageFix"/>
+<feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
+<feOffset dy="4"/>
+<feGaussianBlur stdDeviation="2"/>
+<feComposite in2="hardAlpha" operator="out"/>
+<feColorMatrix type="matrix" values="0 0 0 0 0.6 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0"/>
+<feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_56_35"/>
+<feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_56_35" result="shape"/>
+</filter>
+</defs>
+</svg>

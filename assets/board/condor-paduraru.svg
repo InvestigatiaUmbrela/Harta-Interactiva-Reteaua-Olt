@@ -1,0 +1,17 @@
+<svg width="312" height="117" viewBox="0 0 312 117" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g filter="url(#filter0_d_56_19)">
+<text fill="white" style="white-space: pre" xml:space="preserve" font-family="Epilogue" font-size="60" font-weight="bold" letter-spacing="0em"><tspan x="42.6445" y="47.04">Condor&#10;</tspan><tspan x="0.339844" y="108.04">P&#x102;DURARU</tspan></text>
+</g>
+<defs>
+<filter id="filter0_d_56_19" x="0" y="0" width="311.766" height="116.61" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+<feFlood flood-opacity="0" result="BackgroundImageFix"/>
+<feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
+<feOffset dy="4"/>
+<feGaussianBlur stdDeviation="2"/>
+<feComposite in2="hardAlpha" operator="out"/>
+<feColorMatrix type="matrix" values="0 0 0 0 0.6 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0"/>
+<feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_56_19"/>
+<feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_56_19" result="shape"/>
+</filter>
+</defs>
+</svg>
